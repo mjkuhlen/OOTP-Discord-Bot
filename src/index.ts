@@ -1,13 +1,18 @@
-import 'dotenv/config';
-import { Client, REST, Routes } from 'discord.js';
+import { config } from "dotenv";
+import ExtendedClient from "./class/ExtendedClient";
+import { AppDataSource } from "./datasource";
 
-const token = "process.env.TOKEN";
-const id = "process.eng.CLIENTID";
+config();
 
-const client: Client = new Client({
-    intents: [
-        'Guilds'
-    ]
-});
+export const client = new ExtendedClient();
 
-client.login(token);
+async function initialize() {
+
+    await AppDataSource.initialize().then(() => console.log('The database has been initilalized.'));
+
+    client.start();
+    client.loadModules()
+    client.deploy();
+}
+
+initialize();
