@@ -4,7 +4,7 @@ import { AppDataSource } from '../../datasource';
 import { User } from '../../entity/user';
 
 export default new client.command({
-    stucture: new SlashCommandBuilder()
+    structure: new SlashCommandBuilder()
         .setName('ready')
         .setDescription('Allows a user to update their ready status.')
         .addBooleanOption(option =>

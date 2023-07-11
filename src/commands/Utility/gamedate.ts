@@ -5,7 +5,7 @@ import path from 'path'
 import dayjs from "dayjs";
 
 export default new client.command({
-    stucture: new SlashCommandBuilder()
+    structure: new SlashCommandBuilder()
         .setName('gamedate')
         .setDescription('Replies with the current game date.'),
     run: async (client, interaction) => {

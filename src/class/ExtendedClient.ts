@@ -1,10 +1,11 @@
 import { Client, Collection, REST, Routes } from "discord.js";
 import { Command } from "../types";
 import { readdirSync } from 'node:fs';
+import "dotenv"
 
 export default class extends Client {
     public commands: Collection<string, Command>  = new Collection();
-    public commandsArray: Command['stucture'][] = [];
+    public commandsArray: Command['structure'][] = [];
 
     constructor() {
         super({
@@ -20,8 +21,8 @@ export default class extends Client {
             for (const file of readdirSync('./dist/commands/' + dir + '/')) {
                 const module: Command = require('../commands/' + dir + '/' + file).default;
 
-                this.commands.set(module.stucture.name, module);
-                this.commandsArray.push(module.stucture);
+                this.commands.set(module.structure.name, module);
+                this.commandsArray.push(module.structure);
 
                 console.log('Loaded new command: ' + file);
             }
@@ -38,11 +39,11 @@ export default class extends Client {
     };
 
     public command = class {
-        public structure: Command['stucture'];
+        public structure: Command['structure'];
         public run: Command['run'];
 
         constructor(data: Command) {
-            this.structure = data.stucture;
+            this.structure = data.structure;
             this.run = data.run;
         }
     }
@@ -62,6 +63,6 @@ export default class extends Client {
     };
 
     public async start() {
-        await this.login(process.env.CLIENTID);
+        await this.login(process.env.TOKEN);
     }
 };

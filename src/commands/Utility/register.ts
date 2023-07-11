@@ -4,7 +4,7 @@ import { User } from '../../entity/user';
 import { client } from '../..';
 
 export default new client.command({
-    stucture: new SlashCommandBuilder()
+    structure: new SlashCommandBuilder()
         .setName('register')
         .setDescription('Creates a user in the DB, for tracking ready status')
         .addUserOption(option =>

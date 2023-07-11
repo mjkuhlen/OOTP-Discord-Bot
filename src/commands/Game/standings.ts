@@ -4,7 +4,7 @@ import readCSV from '../../utilities/readCSV';
 import path from 'path';
 
 export default new client.command({
-    stucture: new SlashCommandBuilder()
+    structure: new SlashCommandBuilder()
         .setName('standings')
         .setDescription('Replies with the standings of the chosen division.')
         .addStringOption(option => 

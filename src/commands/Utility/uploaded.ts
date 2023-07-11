@@ -4,7 +4,7 @@ import { AppDataSource } from '../../datasource';
 import { User } from '../../entity/user';
 
 export default new client.command({
-    stucture: new SlashCommandBuilder()
+    structure: new SlashCommandBuilder()
         .setName('uploaded')
         .setDescription('Replies with registered players and their upload status.'),
     run: async (client, interaction) => {

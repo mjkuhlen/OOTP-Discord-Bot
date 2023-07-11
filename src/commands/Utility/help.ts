@@ -2,7 +2,7 @@ import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
 import { client } from "../..";
 
 export default new client.command({
-    stucture: new SlashCommandBuilder()
+    structure: new SlashCommandBuilder()
         .setName('help')
         .setDescription('Replies with a list of all the available commands'),
     run: async (client, interaction) => {
