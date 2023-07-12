@@ -62,6 +62,28 @@ export default class extends Client {
         };
     };
 
+    public async delete() {
+        const rest = new REST().setToken(process.env.TOKEN ?? '');
+        const clientId = process.env.CLIENTID ?? '';
+        const guildId = process.env.GUILDID ?? '';
+        const commandId = '1128380468715343913'
+        try {
+            console.log('Removing Guild Command...')
+            await rest.delete(Routes.applicationGuildCommand(clientId, guildId, commandId))
+                .then(() => console.log('Successfully deleted command'));
+        } catch (err) {
+            console.error(err)
+        }
+
+        try {
+            console.log('Removing Global Command...')
+            await rest.delete(Routes.applicationCommand(clientId, commandId))
+                .then(() => console.log('Global Command Removed'));
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
     public async start() {
         await this.login(process.env.TOKEN);
     }

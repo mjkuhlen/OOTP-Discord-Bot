@@ -10,4 +10,7 @@ export class User {
     
     @Column({ default: false })
     ready!: boolean;
+
+    @Column({nullable: true})
+    gameDate!: string;
 }

@@ -19,10 +19,18 @@ export default new client.command({
         const user = await userRepo.findOneByOrFail({username: userTarget});
         user.ready = !!interaction.options.getBoolean('ready');
         await userRepo.save(user);
-
+        let msg:string = ''
+        let title:string = ''
+        if(user.ready) { 
+            title = 'Ready!'
+            msg = `${userTarget} is ready for the next sim.`
+        } else { 
+            title = 'Not Ready!'
+            msg = `${userTarget} is **not** ready for the next sim.`
+        }
         const embed = new EmbedBuilder()
-            .setTitle('Ready!')
-            .setDescription(`${userTarget} has updated their status for the next sim.`)
+            .setTitle(title)
+            .setDescription(msg)
             .setColor('#0099ff')
         
         await interaction.reply({embeds: [embed]})
