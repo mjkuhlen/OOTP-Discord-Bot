@@ -5,7 +5,7 @@ import path from "path";
 import readCSV from "./utilities/readCSV";
 import { User } from "./entity/user";
 import dayjs from "dayjs";
-import { ChannelType, TextChannel } from "discord.js";
+import { TextChannel } from "discord.js";
 
 config();
 
@@ -38,11 +38,9 @@ async function initialize() {
                 })
                 console.log('New data found, users updated.')
                 try {
-                    const guild = process.env.GULIDID;
-                    const channel = client.channels.cache.get(guild ?? '');
-                    if(channel?.type === ChannelType.GuildText) {
-                        channel.send(`@everyone A new sim has run, the current game date is ${dayjs(gamedate).format('dddd, MMMM D, YYYY')}`)
-                    }
+                    const guild = process.env.GUILDID;
+                    const channel = client.channels.cache.get(guild ?? '')
+                    await (channel as TextChannel).send(`@everyone A new sim has run, the current game date is ${dayjs(gamedate).format('dddd, MMMM D, YYYY')}`)
                 } catch (err) {
                     console.error(err)
                 }
