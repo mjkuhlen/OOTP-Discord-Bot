@@ -30,8 +30,8 @@ async function initialize() {
         
         if(user) {
             if(user.gameDate !== date) {
-                const users = await userRepo.find();
-                users.map((user:any) => {
+                const users:User[] = await userRepo.find();
+                users.map((user) => {
                     user.gameDate = date;
                     user.ready = false;
                     userRepo.save(user);
