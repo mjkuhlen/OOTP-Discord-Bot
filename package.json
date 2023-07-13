@@ -6,8 +6,8 @@
   "scripts": {
     "build": "tsc && node ."
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["ootp", "discord", "discord.js", "bot"],
+  "author": "Matthew Kuhlen",
   "license": "ISC",
   "dependencies": {
     "csv-parser": "^3.0.0",
