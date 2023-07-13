@@ -3,6 +3,7 @@ A discord bot that interacts with OOTP to display up-to-date game data in your d
 
 # Installation
 - Clone Repository
+- Make sure you have [Node Installed](https://nodejs.org/en)
 - In terminal and from the root folder of the project run ```npm install```
 - Follow instructions at [Discord.js](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot) to create bot
 - Create a .env (in the root folder of the project) with TOKEN, GUILDID, & CLIENTID.  clientId: Your application's client id ([Discord Developer Portal](https://discord.com/developers/applications) > "General Information" > application id), guildId: Your development server's id ([Enable developer mode](https://support.discord.com/hc/en-us/articles/206346498) > Right-click the server title > "Copy ID")
