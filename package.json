@@ -1,5 +1,5 @@
 {
-  "name": "ootp-simbot-v3",
+  "name": "ootp-discord-bot",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
