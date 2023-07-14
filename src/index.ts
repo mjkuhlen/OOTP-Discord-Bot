@@ -27,13 +27,13 @@ async function initialize() {
         const gamedate = new Date(date)
 
         const userRepo = AppDataSource.getRepository(User);
-        const user = await userRepo.findOneBy({id: 1});
 
         const dateRepo = AppDataSource.getRepository(GameDate);
+        const checkDB = await dateRepo.findOneBy({id: 1})
 
-        if(!await dateRepo.findOneBy({id: 1})) {
-            const newDbDate = dateRepo.create({date:date});
-            dateRepo.save(newDbDate);
+        if(checkDB == null) {
+            const newDbDate = await dateRepo.create({date:date});
+            await dateRepo.save(newDbDate);
         };
 
         const dbDate = await dateRepo.findOneByOrFail({id: 1});

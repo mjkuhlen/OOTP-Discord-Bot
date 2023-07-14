@@ -35,12 +35,18 @@ export default new client.command({
     run: async (client, interaction) => {
         try {
             const newsPath = path.join(__dirname, '..', '..', 'csv', 'messages.csv');
-            const news:any = readCSV(newsPath);
+            const news:any = await readCSV(newsPath);
             const dateRepo = AppDataSource.getRepository(GameDate);
             const gameDate = await dateRepo.findOne({where: {id: 1}});
+            const dateParts:any = gameDate?.date.split('-');
+
+            const year = parseInt(dateParts[0]);
+            const month = parseInt(dateParts[1]) - 1; // Months are zero-indexed in JavaScript
+            const day = parseInt(dateParts[2]);
+
             const previousWeek = dayjs(gameDate?.date).subtract(7, 'days').format('YYYY-M-D');
 
-            const filteredData = news.filter((message: any) => dayjs(message.date).format('YYYY-M-D') > previousWeek);
+            const filteredData = news.filter((message: any) => dayjs(message.date).format('YYYY-M-D') > previousWeek && message.league_id_0 === '200');
 
             console.log(filteredData)
         } catch (err) {
