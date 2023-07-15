@@ -22,13 +22,11 @@ export default new client.command({
             const month = parseInt(dateParts[1]) - 1; // Months are zero-indexed in JavaScript
             const day = parseInt(dateParts[2]);
 
-            const previousWeek = dayjs(gameDate?.date).subtract(7, 'days').format('YYYY-M-D');
+            const previousWeek = new Date(dayjs(gameDate?.date).subtract(7, 'days').format('YYYY-M-D'));
             
             //const filteredData = news.filter((message: any) => dayjs(message.date).format('YYYY-M-D') > previousWeek && message.league_id_0 === '200');
-            news.filter((message:any) => (dayjs(message.date).format('YYYY-M-D') > previousWeek) && (message.league_id_0 === '200')).map((headline:any) => {
-                console.log('Date Comparison')
-                console.log(dayjs(headline.date).format('YYYY-M-D') > previousWeek)
-                //console.log(`${dayjs(headline.date).format('MMMM D YYYY')} - ${headline.subject}`)
+            news.filter((message:any) => (new Date(dayjs(message.date).format('YYYY-M-D')) > previousWeek) && (message.league_id_0 === '200')).map((headline:any) => {
+                console.log(`${dayjs(headline.date).format('MMMM D YYYY')} - ${headline.subject}`)
             })
 
             // const headlines = filteredData.map((headline: any) => 
