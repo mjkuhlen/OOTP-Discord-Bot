@@ -23,12 +23,18 @@ export default new client.command({
             const day = parseInt(dateParts[2]);
 
             const previousWeek = dayjs(gameDate?.date).subtract(7, 'days').format('YYYY-M-D');
+            console.log(previousWeek)
+            
+            //const filteredData = news.filter((message: any) => dayjs(message.date).format('YYYY-M-D') > previousWeek && message.league_id_0 === '200');
+            news.filter((message:any) => dayjs(message.date).format('YYYY-M-D') > previousWeek && message.league_id_0 === '200').map((message:any) => {
+                console.log(dayjs(message.date).format('YYYY-M-D'))
+            })
 
-            const filteredData = news.filter((message: any) => dayjs(message.date).format('YYYY-M-D') > previousWeek && message.league_id_0 === '200');
+            // const headlines = filteredData.map((headline: any) => 
+            //     `${dayjs(headline.date).format('MMMM D YYYY')} - ${headline.subject}`
+            // ).join('\n')
 
-            const headlines = filteredData.map((headline: any) => 
-                `${dayjs(headline.date).format('MMMM D YYYY')} - ${headline.subject}`
-            ).join('\n')
+            const headlines = 'testing'
 
             const embed = new EmbedBuilder()
                 .setTitle('Here are the headlines from the last 7 days.')
