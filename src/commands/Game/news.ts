@@ -22,18 +22,13 @@ export default new client.command({
             const month = parseInt(dateParts[1]) - 1; // Months are zero-indexed in JavaScript
             const day = parseInt(dateParts[2]);
 
-            const previousWeek = new Date(dayjs(gameDate?.date).subtract(7, 'days').format('YYYY-M-D'));
+            const previousWeek = new Date(dayjs(gameDate?.date).subtract(8, 'days').format('YYYY-M-D'));
             
-            //const filteredData = news.filter((message: any) => dayjs(message.date).format('YYYY-M-D') > previousWeek && message.league_id_0 === '200');
-            news.filter((message:any) => (new Date(dayjs(message.date).format('YYYY-M-D')) > previousWeek) && (message.league_id_0 === '200')).map((headline:any) => {
-                console.log(`${dayjs(headline.date).format('MMMM D YYYY')} - ${headline.subject}`)
-            })
+            const filteredData = news.filter((message: any) => (new Date(dayjs(message.date).format('YYYY-M-D')) > previousWeek) && (message.league_id_0 === '200'));
 
-            // const headlines = filteredData.map((headline: any) => 
-            //     `${dayjs(headline.date).format('MMMM D YYYY')} - ${headline.subject}`
-            // ).join('\n')
-
-            const headlines = 'testing'
+            const headlines = filteredData.map((headline: any) => 
+                `${dayjs(headline.date).format('MMMM D YYYY')} - ${headline.subject}`
+            ).join('\n')
 
             const embed = new EmbedBuilder()
                 .setTitle('Here are the headlines from the last 7 days.')
