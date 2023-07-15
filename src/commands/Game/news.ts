@@ -25,11 +25,9 @@ export default new client.command({
             const previousWeek = dayjs(gameDate?.date).subtract(7, 'days').format('YYYY-M-D');
             
             //const filteredData = news.filter((message: any) => dayjs(message.date).format('YYYY-M-D') > previousWeek && message.league_id_0 === '200');
-            news.filter((message:any) => dayjs(message.date).format('YYYY-M-D') > previousWeek && message.league_id_0 === '200').map((message:any) => {
-                console.log(dayjs(message.date).format('YYYY-M-D'))
+            news.filter((message:any) => (dayjs(message.date).format('YYYY-M-D') > previousWeek) && (message.league_id_0 === '200')).map((headline:any) => {
+                console.log(`${dayjs(headline.date).format('MMMM D YYYY')} - ${headline.subject}`)
             })
-
-            console.log(previousWeek)
 
             // const headlines = filteredData.map((headline: any) => 
             //     `${dayjs(headline.date).format('MMMM D YYYY')} - ${headline.subject}`
