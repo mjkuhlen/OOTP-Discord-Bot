@@ -47,10 +47,10 @@ export default new client.command({
             const playersPath = path.join(__dirname, '..', '..', 'csv', 'players.csv');
 
             //Process CSV files
-			const teams:any = await readCSV(teamsPath);
+			const teams:any = await readCSV(teamsPath, league_id);
 			const teamRecords:any = await readCSV(teamRecordPath);
-            const games:any = await readCSV(gamesPath);
-            const players:any = await readCSV(playersPath);
+            const games:any = await readCSV(gamesPath, league_id);
+            const players:any = await readCSV(playersPath, league_id);
 
             //Get team based on their nickname and league_id.  Will use this info to find additional data about team. 
             const csvTeam = teams.find((team:any) => (team.nickname.toLowerCase() === teamName?.toLowerCase() && team.league_id === league_id));
