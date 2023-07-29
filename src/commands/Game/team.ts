@@ -6,6 +6,25 @@ import { AppDataSource } from "../../datasource";
 import { GameDate } from "../../entity/gamedate";
 import dayjs from "dayjs";
 
+// Function to read and parse specific player fields from CSV data
+async function readPlayerData(players: any, playerID: string) {
+    const foundPlayer = await players.find((player:any) => (player.player_id === playerID));
+    return {
+        player_id: foundPlayer.player_id,
+        team_id: foundPlayer.team_id,
+        first_name: foundPlayer.first_name,
+        last_name: foundPlayer.last_name
+    }
+  }
+
+// Function to read and parse specific player fields from CSV data
+async function readTeamData(teams: any, teamID: string) {
+    const foundTeam = await teams.find((team:any) => (team.team_id === teamID))
+    return {
+        team_id: foundTeam.team_id,
+        nickname: foundTeam.nickname
+    }
+  }
 
 export default new client.command({
     structure: new SlashCommandBuilder()
@@ -33,26 +52,6 @@ export default new client.command({
             const games:any = await readCSV(gamesPath);
             const players:any = await readCSV(playersPath);
 
-            // Create a mapping of player IDs to player information
-            const playerIDMap: { [key: string]: any } = {};
-            players.forEach((player:any) => {
-                    playerIDMap[player.player_id] = {
-                        first_name: player.first_name,
-                        last_name: player.last_name,
-                        player_id: player.player_id,
-                        team_id: player.team_id, 
-                    };
-                });
-
-            // Create a mapping of team IDs to team information
-            const teamIDMap: { [key: string]: any } = {};
-            teams.forEach((team:any) => {
-                    teamIDMap[team.team_id] = {
-                        team_id: team.team_id,
-                        nickname: team.nickname,
-                    };
-                });
-
             //Get team based on their nickname and league_id.  Will use this info to find additional data about team. 
             const csvTeam = teams.find((team:any) => (team.nickname.toLowerCase() === teamName?.toLowerCase() && team.league_id === league_id));
 
@@ -70,19 +69,18 @@ export default new client.command({
             const gameLines: any[] = [];
             let wins = 0;
             let losses = 0;
-            games.map((game:any) => {
+            await Promise.all(games.map(async (game:any) => {
                 const gameDay = new Date(dayjs(game.date).format('YYYY-M-D'));
                 if((gameDay >= previousWeek && gameDay < currentDate) && (game.home_team === csvTeam.team_id || game.away_team === csvTeam.team_id)) {
                     // Look up player information for winning pitcher, losing pitcher, save pitcher, starter0, and starter1
-                    const winningPitcher = playerIDMap[game.winning_pitcher];
-                    const losingPitcher = playerIDMap[game.losing_pitcher];
-                    const savePitcher = playerIDMap[game.save_pitcher];
-                    const starter0 = playerIDMap[game.starter0];
-                    const starter1 = playerIDMap[game.starter1];
+                    const winningPitcher = await readPlayerData(players, game.winning_pitcher);
+                    const losingPitcher = await readPlayerData(players, game.losing_pitcher);
+                    const starter0 = await readPlayerData(players, game.starter0);
+                    const starter1 = await readPlayerData(players, game.starter1);
 
                     // Look up team information
-                    const home_team = teamIDMap[game.home_team];
-                    const away_team = teamIDMap[game.away_team];
+                    const home_team = await readTeamData(teams, game.home_team);
+                    const away_team = await readTeamData(teams, game.away_team);
 
                     // Add player information to the game object
                     const gameWithPlayerInfo = {
@@ -91,32 +89,36 @@ export default new client.command({
                         away_team: away_team,
                         winning_pitcher: winningPitcher,
                         losing_pitcher: losingPitcher,
-                        save_pitcher: savePitcher,
                         starter0: starter0,
                         starter1: starter1,
                     };
 
-                    if(home_team.team_id === csvTeam.team_id) {
+                    if((await home_team)?.team_id === csvTeam.team_id) {
                         if(gameWithPlayerInfo.runs1 > gameWithPlayerInfo.runs0) {
                             wins = wins + 1
                         } else {
                             losses = losses + 1
                         }
-                    }
+                    };
 
-                    if(away_team.team_id === csvTeam.team_id) {
+                    if((await away_team).team_id === csvTeam.team_id) {
                         if(gameWithPlayerInfo.runs0 > gameWithPlayerInfo.runs1) {
                             wins = wins + 1
                         } else {
                             losses = losses + 1
                         }
-                    }
+                    };
 
-                    gameLines.push({name: `${gameWithPlayerInfo.date} - ${gameWithPlayerInfo.away_team.nickname} ${gameWithPlayerInfo.runs0} @ ${gameWithPlayerInfo.home_team.nickname} ${gameWithPlayerInfo.runs1}`, value: `W: ${gameWithPlayerInfo.winning_pitcher.first_name} ${gameWithPlayerInfo.winning_pitcher.last_name} L: ${gameWithPlayerInfo.losing_pitcher.first_name} ${gameWithPlayerInfo.losing_pitcher.last_name}`})
+                    const newGame = {
+                        name:`${gameWithPlayerInfo.date} - ${gameWithPlayerInfo.away_team.nickname} ${gameWithPlayerInfo.runs0} @ ${gameWithPlayerInfo.home_team.nickname} ${gameWithPlayerInfo.runs1}`,
+                        value:`W: ${gameWithPlayerInfo.winning_pitcher.first_name} ${gameWithPlayerInfo.winning_pitcher.last_name} L: ${gameWithPlayerInfo.losing_pitcher.first_name} ${gameWithPlayerInfo.losing_pitcher.last_name}`
+                    };
+
+                    gameLines.push(newGame);
                     filteredGames.push(gameWithPlayerInfo);
                 }
-            });
-
+            }));
+;
             let response: string = `Over the last 7 days the ${csvTeam.nickname} have ${wins} wins and ${losses} losses. For the season they are ${csvTeamRecord.w}-${csvTeamRecord.l} that's a winning percentage of ${Number(csvTeamRecord.pct).toFixed(2)}. `
             let streak: string = ''
             if(csvTeamRecord.streak > 0) {
