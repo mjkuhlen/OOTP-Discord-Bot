@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc && node ."
+    "build": "tsc && node --max-old-space-size=4096 ."
   },
   "keywords": ["ootp", "discord", "discord.js", "bot"],
   "author": "Matthew Kuhlen",
