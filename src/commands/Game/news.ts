@@ -37,7 +37,7 @@ export default new client.command({
 
             await interaction.reply({embeds: [embed]})
         } catch (err) {
-            console.error(err)
+            console.error(err);
         }
     }
 })
