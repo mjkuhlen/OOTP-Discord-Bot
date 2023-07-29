@@ -72,7 +72,7 @@ export default new client.command({
             await Promise.all(games.map(async (game:any) => {
                 const gameDay = new Date(dayjs(game.date).format('YYYY-M-D'));
                 if((gameDay >= previousWeek && gameDay < currentDate) && (game.home_team === csvTeam.team_id || game.away_team === csvTeam.team_id)) {
-                    // Look up player information for winning pitcher, losing pitcher, save pitcher, starter0, and starter1
+                    // Look up player information for winning pitcher, losing pitcher, starter0, and starter1
                     const winningPitcher = await readPlayerData(players, game.winning_pitcher);
                     const losingPitcher = await readPlayerData(players, game.losing_pitcher);
                     const starter0 = await readPlayerData(players, game.starter0);
@@ -141,6 +141,7 @@ export default new client.command({
             await interaction.editReply({ embeds: [embed] })
         } catch (err) {
             console.error(err);
+            await interaction.editReply({content: 'Something went wrong. Simbot is sad.'})
         }
     }
 })
