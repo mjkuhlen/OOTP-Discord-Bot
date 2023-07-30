@@ -119,7 +119,7 @@ export default new client.command({
                 }
             }));
 ;
-            let response: string = `Over the last 7 days the ${csvTeam.nickname} have ${wins} wins and ${losses} losses. For the season they are ${csvTeamRecord.w}-${csvTeamRecord.l} that's a winning percentage of ${Number(csvTeamRecord.pct).toFixed(2)}. `
+            let response: string = `Over the last week the ${csvTeam.nickname} have ${wins} wins and ${losses} losses. For the season they are ${csvTeamRecord.w}-${csvTeamRecord.l} that's a winning percentage of ${Number(csvTeamRecord.pct).toFixed(2)}. `
             let streak: string = ''
             if(csvTeamRecord.streak > 0) {
                 streak = `The ${csvTeam.nickname} are currently on a ${csvTeamRecord.streak} winning streak. `

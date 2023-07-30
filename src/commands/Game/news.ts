@@ -38,6 +38,7 @@ export default new client.command({
             await interaction.reply({embeds: [embed]})
         } catch (err) {
             console.error(err);
+            await interaction.editReply({content: 'Something went wrong. Simbot is sad.'})
         }
     }
 })
