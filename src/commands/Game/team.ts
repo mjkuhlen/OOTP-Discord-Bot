@@ -93,7 +93,7 @@ export default new client.command({
                         starter1: starter1,
                     };
 
-                    if((await home_team)?.team_id === csvTeam.team_id) {
+                    if(await home_team.team_id === csvTeam.team_id) {
                         if(gameWithPlayerInfo.runs1 > gameWithPlayerInfo.runs0) {
                             wins = wins + 1
                         } else {
@@ -101,7 +101,7 @@ export default new client.command({
                         }
                     };
 
-                    if((await away_team).team_id === csvTeam.team_id) {
+                    if(await away_team.team_id === csvTeam.team_id) {
                         if(gameWithPlayerInfo.runs0 > gameWithPlayerInfo.runs1) {
                             wins = wins + 1
                         } else {
