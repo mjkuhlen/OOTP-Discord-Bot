@@ -3,21 +3,34 @@ import { client } from "../..";
 import readCSV from '../../utilities/readCSV'
 import path from 'path'
 import dayjs from "dayjs";
+import { PrismaClient } from '@prisma/client';
 
 export default new client.command({
     structure: new SlashCommandBuilder()
         .setName('gamedate')
         .setDescription('Replies with the current game date.'),
     run: async (client, interaction) => {
-        const leaguesPath = path.join(__dirname, "..", "..", "csv", "leagues.csv");
-        const leagues:any = await readCSV(leaguesPath);
-        const date = new Date(leagues[0].current_date);
-        
-        const embed = new EmbedBuilder()
-            .setTitle('Current Game Date')
-            .setDescription(`The current game date is: ${dayjs(date).format('MMMM D, YYYY')}`)
-            .setColor('#0099ff');
-        
-        await interaction.reply({ embeds: [embed]})
+        try {
+            const prisma = new PrismaClient();
+            const league_id = 200
+            const leagues = await prisma.leagues.findFirst({
+                where: {
+                    league_id: league_id
+                }
+            });
+    
+            const date = dayjs(leagues?.current_date).add(1, 'day');
+            
+            const embed = new EmbedBuilder()
+                .setTitle('Current Game Date')
+                .setDescription(`The current game date is: ${dayjs(date).format('MMMM D, YYYY')}`)
+                .setColor('#0099ff');
+    
+            await prisma.$disconnect();
+            await interaction.reply({ embeds: [embed] })
+        } catch (err) {
+            console.error(err);
+            await interaction.reply({content: 'Something went wrong. Simbot is sad.'})
+        }
     }
 });

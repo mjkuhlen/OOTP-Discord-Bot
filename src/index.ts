@@ -7,6 +7,7 @@ import { User } from "./entity/user";
 import dayjs from "dayjs";
 import { TextChannel } from "discord.js";
 import { GameDate } from "./entity/gamedate";
+import { PrismaClient } from '@prisma/client';
 
 config();
 
@@ -21,10 +22,15 @@ async function initialize() {
     client.deploy();
 
     setInterval(async () => {
-        const leaguesPath = path.join(__dirname, "csv", "leagues.csv");
-        const leagues:any = await readCSV(leaguesPath);
-        const date = leagues[0].current_date;
-        const gamedate = new Date(date)
+        const prisma = new PrismaClient();
+        const league_id = 200
+        const leagues = await prisma.leagues.findFirst({
+            where: {
+                league_id: league_id
+            }
+        });
+        const date: any = leagues?.current_date;
+        const gamedate = dayjs(date).add(1, 'day').toDate();
 
         const userRepo = AppDataSource.getRepository(User);
 
@@ -37,13 +43,17 @@ async function initialize() {
         };
 
         const dbDate = await dateRepo.findOneByOrFail({id: 1});
+        const checkDate = dayjs(dbDate.date).toDate();
+
+        console.log(`dbDate - ${dbDate.date}`)
+        console.log(`gameDate - ${gamedate}`)
         
-        if(dbDate.date !== date) {
-            dbDate.date = date;
+        if(checkDate !== gamedate) {
+            dbDate.date = gamedate;
             await dateRepo.save(dbDate);
             const users:User[] = await userRepo.find();
             users.map((user) => {
-                user.gameDate = date;
+                user.gameDate = gamedate;
                 user.ready = false;
                 userRepo.save(user);
             })

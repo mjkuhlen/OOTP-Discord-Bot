@@ -1,7 +1,6 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { client } from '../..';
-import readCSV from '../../utilities/readCSV';
-import path from 'path';
+import { PrismaClient } from '@prisma/client';
 
 export default new client.command({
     structure: new SlashCommandBuilder()
@@ -28,39 +27,65 @@ export default new client.command({
                 )),
     run: async (client, interaction) => {
         try {
-			const teamsPath = path.join(__dirname, '..', '..', 'csv', 'teams.csv');
-			const teamRecordPath = path.join(__dirname, '..', '..', 'csv', 'team_record.csv');
-			const teams:any = await readCSV(teamsPath);
-			const teamRecords:any = await readCSV(teamRecordPath);
+			const prisma = new PrismaClient();
+			const leagueValue = interaction.options.getString('league');
+			const divisionValue = interaction.options.getString('division');
 
-			const mergedData = teams.map((team:any) => {
-				const teamRecord = teamRecords.find((record:any) => record.team_id === team.team_id);
-				return { ...team, ...teamRecord };
+			//get the teams from sql that matches the league and division values
+			const pTeams = await prisma.teams.findMany({
+				where: {league_id: 200, sub_league_id: Number(leagueValue), division_id: Number(divisionValue), allstar_team: 0},
+				select: {
+					team_id: true,
+					nickname: true
+				}
 			});
 
-			const filteredData = mergedData.filter((item:any) => item.league_id === '200' && item.sub_league_id === interaction.options.getString('league') && item.division_id === interaction.options.getString('division') && item.allstar_team !== '1');
+			//create a list of the team_ids
+			const teamList:any = [];
+			pTeams.map((team:any) => {
+				teamList.push(team.team_id)
+			})
 
-			const sortedData = filteredData.sort((a:any, b:any) => a.pos - b.pos);
+			//use team_ids to query team records
+			const pRecrods = await prisma.team_record.findMany({
+				where: {
+					team_id: { in: teamList}
+				},
+				select: {
+					team_id: true,
+					g: true,
+					w: true,
+					l: true,
+					gb: true,
+					pos: true,
+				}
+			});
 
-			const tableRows:any = [];
-			// Iterate over the sortedData and add each row to the tableRows array
-			sortedData.forEach((team:any) => {
+			//merge the team and team_records data together
+			const mData = pTeams.map((team:any) => {
+				const teamRecord = pRecrods.find((record:any) => record.team_id === team.team_id);
+				return { ...team, ...teamRecord}
+			});
+
+			//sort the data by the position column
+			const sData = mData.sort((a:any, b:any) => a.pos - b.pos);
+
+			//create the rows for the table
+			const newTableRows: any = [];
+			sData.forEach((team:any) => {
 				const row = `${team.nickname.padEnd(10)} | ${team.g.toString().padEnd(5)} | ${team.w.toString().padEnd(4)} | ${team.l.toString().padEnd(6)} | ${team.gb.toString().padEnd(6)}`;
-				tableRows.push(row);
+				newTableRows.push(row);
 			});
 
 			// Create the table header
 			const tableHeader = 'Nickname   | Games | Wins | Losses | GB\n-----------|-------|------|--------|------';
 
 			// Combine the table header and rows to create the complete table string
-  			const table = `\`\`\`\n${tableHeader}\n${tableRows.join('\n')}\n\`\`\``;
+  			const table = `\`\`\`\n${tableHeader}\n${newTableRows.join('\n')}\n\`\`\``;
 
 			const replyContent = `
 			${table}
 			`;
-
-			const leagueValue = interaction.options.getString('league');
-			const divisionValue = interaction.options.getString('division');
 
 			let leagueName = '';
 
@@ -98,6 +123,7 @@ export default new client.command({
 				.setDescription(replyContent)
 				.setColor('#0099ff');
 
+			await prisma.$disconnect();
 			await interaction.reply({ embeds: [embed] });
         } catch (err) {
             console.error('Error Occured:', err);

@@ -1,10 +1,9 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { client } from "../..";
-import readCSV from "../../utilities/readCSV";
-import path from "path";
 import { AppDataSource } from "../../datasource";
 import { GameDate } from "../../entity/gamedate";
 import dayjs from "dayjs";
+import { PrismaClient } from '@prisma/client';
 
 export default new client.command({
     structure: new SlashCommandBuilder()
@@ -12,33 +11,38 @@ export default new client.command({
     .setDescription('Replies with the latest league news.'),
     run: async (client, interaction) => {
         try {
-            const newsPath = path.join(__dirname, '..', '..', 'csv', 'messages.csv');
-            const news:any = await readCSV(newsPath);
             const dateRepo = AppDataSource.getRepository(GameDate);
             const gameDate = await dateRepo.findOne({where: {id: 1}});
-            const dateParts:any = gameDate?.date.split('-');
+            const previousWeek = dayjs(gameDate?.date).subtract(8, 'days').toDate();
 
-            const year = parseInt(dateParts[0]);
-            const month = parseInt(dateParts[1]) - 1; // Months are zero-indexed in JavaScript
-            const day = parseInt(dateParts[2]);
+            const prisma = new PrismaClient();
+            const pNews = await prisma.messages.findMany({
+                where: {league_id_0: 200, date: {
+                    gte: previousWeek
+                }},
+                take: 25
+            });
 
-            const previousWeek = new Date(dayjs(gameDate?.date).subtract(8, 'days').format('YYYY-M-D'));
-            
-            const filteredData = news.filter((message: any) => (new Date(dayjs(message.date).format('YYYY-M-D')) > previousWeek) && (message.league_id_0 === '200'));
+            const headlines:any = []
+            pNews.map((headline: any) => 
 
-            const headlines = filteredData.map((headline: any) => 
-                `${dayjs(headline.date).format('MMMM D YYYY')} - ${headline.subject}`
-            ).join('\n')
+                headlines.push(
+                    {
+                        name: `${dayjs(headline.date).format('MMMM D, YYYY')}`,
+                        value: `${headline.subject}`
+                    })
+            )
 
             const embed = new EmbedBuilder()
                 .setTitle('Here are the headlines from the last 7 days.')
-                .setDescription(headlines)
+                .setFields(headlines)
                 .setColor('#0099ff');
 
+            await prisma.$disconnect()
             await interaction.reply({embeds: [embed]})
         } catch (err) {
             console.error(err);
-            await interaction.editReply({content: 'Something went wrong. Simbot is sad.'})
+            await interaction.reply({content: 'Something went wrong. Simbot is sad.'})
         }
     }
 })

@@ -6,5 +6,5 @@ export class GameDate {
     id!: number;
 
     @Column()
-    date!: string;
+    date!: Date;
 }

@@ -6,10 +6,16 @@
   "scripts": {
     "build": "tsc && node --max-old-space-size=4096 ."
   },
-  "keywords": ["ootp", "discord", "discord.js", "bot"],
+  "keywords": [
+    "ootp",
+    "discord",
+    "discord.js",
+    "bot"
+  ],
   "author": "Matthew Kuhlen",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^5.1.1",
     "csv-parser": "^3.0.0",
     "dayjs": "^1.11.9",
     "discord.js": "^14.11.0",
@@ -19,6 +25,7 @@
     "typeorm": "^0.3.17"
   },
   "devDependencies": {
-    "@types/node": "^20.4.1"
+    "@types/node": "^20.4.1",
+    "prisma": "^5.1.1"
   }
 }

@@ -5,6 +5,7 @@ import readCSV from "../../utilities/readCSV";
 import { AppDataSource } from "../../datasource";
 import { GameDate } from "../../entity/gamedate";
 import dayjs from "dayjs";
+import { PrismaClient } from '@prisma/client'
 
 // Function to read and parse specific player fields from CSV data
 async function readPlayerData(players: any, playerID: string) {
@@ -36,108 +37,150 @@ export default new client.command({
             .setRequired(true)),
     run: async (client, interaction) => {
         try {
-            const teamName = interaction.options.getString('name'); //Get team nickname from User
+            const prisma = new PrismaClient();
             await interaction.deferReply();
-            const league_id = '200'; //In the event of duplicate team nicknames, set league_id to choose team from MLB
-
-            //Find CSV files
-			const teamsPath = path.join(__dirname, '..', '..', 'csv', 'teams.csv');
-            const teamRecordPath = path.join(__dirname, '..', '..', 'csv', 'team_record.csv');
-            const gamesPath = path.join(__dirname, '..', '..', 'csv', 'games.csv');
-            const playersPath = path.join(__dirname, '..', '..', 'csv', 'players.csv');
-
-            //Process CSV files
-			const teams:any = await readCSV(teamsPath, league_id);
-			const teamRecords:any = await readCSV(teamRecordPath);
-            const games:any = await readCSV(gamesPath, league_id);
-            const players:any = await readCSV(playersPath, league_id);
-
-            //Get team based on their nickname and league_id.  Will use this info to find additional data about team. 
-            const csvTeam = teams.find((team:any) => (team.nickname.toLowerCase() === teamName?.toLowerCase() && team.league_id === league_id));
-
-            //Get team record
-            const csvTeamRecord = teamRecords.find((team:any) => (team.team_id === csvTeam.team_id));
-
-            //Get the gamedate and the date of 1 week prior
-            const dateRepo = AppDataSource.getRepository(GameDate);
-            const gameDate = await dateRepo.findOne({where: {id: 1}});
-            const previousWeek = new Date(dayjs(gameDate?.date).subtract(8, 'days').format('YYYY-M-D'));
-            const currentDate = new Date(dayjs(gameDate?.date).format('YYYY-M-D'));
-
-            //Find the last 7 days of games for the specified team
-            const filteredGames: any[] = [];
-            const gameLines: any[] = [];
+            const league_id = 200; //In the event of duplicate team nicknames, set league_id to choose team from MLB
             let wins = 0;
             let losses = 0;
-            await Promise.all(games.map(async (game:any) => {
-                const gameDay = new Date(dayjs(game.date).format('YYYY-M-D'));
-                if((gameDay >= previousWeek && gameDay < currentDate) && (game.home_team === csvTeam.team_id || game.away_team === csvTeam.team_id)) {
-                    // Look up player information for winning pitcher, losing pitcher, starter0, and starter1
-                    const winningPitcher = await readPlayerData(players, game.winning_pitcher);
-                    const losingPitcher = await readPlayerData(players, game.losing_pitcher);
-                    const starter0 = await readPlayerData(players, game.starter0);
-                    const starter1 = await readPlayerData(players, game.starter1);
 
-                    // Look up team information
-                    const home_team = await readTeamData(teams, game.home_team);
-                    const away_team = await readTeamData(teams, game.away_team);
+            const gameLines: any[] = [];
 
-                    // Add player information to the game object
-                    const gameWithPlayerInfo = {
-                        ...game,
-                        home_team: home_team,
-                        away_team: away_team,
-                        winning_pitcher: winningPitcher,
-                        losing_pitcher: losingPitcher,
-                        starter0: starter0,
-                        starter1: starter1,
-                    };
+            const dateRepo = AppDataSource.getRepository(GameDate);
+            const gameDate = await dateRepo.findOne({where: {id: 1}});
+            const currentDate = dayjs(gameDate?.date).add(1, 'day').toDate();
+            const previousWeek = dayjs(gameDate?.date).subtract(8, 'days').toDate();
 
-                    if(await home_team.team_id === csvTeam.team_id) {
-                        if(gameWithPlayerInfo.runs1 > gameWithPlayerInfo.runs0) {
-                            wins = wins + 1
-                        } else {
-                            losses = losses + 1
+            const pTeam:any = await prisma.teams.findFirst({where: {
+                nickname: interaction.options.getString('name'), league_id: league_id
+            }});
+            const pRecord:any = await prisma.team_record.findFirst({where: {
+                team_id: pTeam?.team_id
+            }});
+            const pGames = await prisma.games.findMany({
+                where: {
+                    league_id: league_id,
+                    AND: [
+                        {
+                            date: 
+                                {
+                                    gte: previousWeek
+                                }
+                        },
+                        {
+                            date:
+                                {
+                                    lte: currentDate
+                                }
                         }
-                    };
-
-                    if(await away_team.team_id === csvTeam.team_id) {
-                        if(gameWithPlayerInfo.runs0 > gameWithPlayerInfo.runs1) {
-                            wins = wins + 1
-                        } else {
-                            losses = losses + 1
+                    ],
+                    OR: [
+                        {
+                            home_team: pTeam?.team_id
+                        },
+                        {
+                            away_team: pTeam?.team_id
                         }
-                    };
-
-                    const newGame = {
-                        name:`${gameWithPlayerInfo.date} - ${gameWithPlayerInfo.away_team.nickname} ${gameWithPlayerInfo.runs0} @ ${gameWithPlayerInfo.home_team.nickname} ${gameWithPlayerInfo.runs1}`,
-                        value:`W: ${gameWithPlayerInfo.winning_pitcher.first_name} ${gameWithPlayerInfo.winning_pitcher.last_name} L: ${gameWithPlayerInfo.losing_pitcher.first_name} ${gameWithPlayerInfo.losing_pitcher.last_name}`
-                    };
-
-                    gameLines.push(newGame);
-                    filteredGames.push(gameWithPlayerInfo);
+                    ]
                 }
+            });
+
+            await Promise.all(pGames.map(async (game:any) => {
+                const winningPitcher = await prisma.players.findFirst({
+                    where: {
+                        player_id: game.winning_pitcher
+                    }
+                });
+                const losingPitcher = await prisma.players.findFirst({
+                    where: {
+                        player_id: game.losing_pitcher
+                    }
+                });
+                const starter0 = await prisma.players.findFirst({
+                    where: {
+                        player_id: game.starter0
+                    }
+                });
+                const starter1 = await prisma.players.findFirst({
+                    where: {
+                        player_id: game.starter1
+                    }
+                });
+
+                const home_team = await prisma.teams.findFirst({
+                    where: {
+                        team_id: game.home_team
+                    }
+                });
+                const away_team = await prisma.teams.findFirst({
+                    where: {
+                        team_id: game.away_team
+                    }
+                });
+                
+                const gameWithPlayerInfo= {
+                    ...game,
+                    home_team: home_team,
+                    away_team: away_team,
+                    winning_pitcher: winningPitcher,
+                    losing_pitcher: losingPitcher,
+                    starter0: starter0,
+                    starter1: starter1
+                };
+
+                if(await home_team?.team_id === pTeam?.team_id) {
+                    if(gameWithPlayerInfo.runs0 > gameWithPlayerInfo.runs1) {
+                        wins = wins + 1;
+                    } else {
+                        losses = losses + 1;
+                    }
+                };
+
+                if(await away_team?.team_id === pTeam?.team_id) {
+                    if(gameWithPlayerInfo.runs0 > gameWithPlayerInfo.runs1) {
+                        wins = wins + 1;
+                    } else {
+                        losses = losses + 1;
+                    }
+                };
+
+                const newGame = {
+                    name:`${gameWithPlayerInfo.date} - ${gameWithPlayerInfo.away_team.nickname} ${gameWithPlayerInfo.runs0} @ ${gameWithPlayerInfo.home_team.nickname} ${gameWithPlayerInfo.runs1}`,
+                    value:`W: ${gameWithPlayerInfo.winning_pitcher.first_name} ${gameWithPlayerInfo.winning_pitcher.last_name} L: ${gameWithPlayerInfo.losing_pitcher.first_name} ${gameWithPlayerInfo.losing_pitcher.last_name}`
+                };
+
+                gameLines.push(newGame);
+
             }));
-;
-            let response: string = `Over the last week the ${csvTeam.nickname} have ${wins} wins and ${losses} losses. For the season they are ${csvTeamRecord.w}-${csvTeamRecord.l} that's a winning percentage of ${Number(csvTeamRecord.pct).toFixed(2)}. `
+
+            let opening: string = '';
+
+            if(pGames.length > 0) {
+                opening = `Over the last week the ${pTeam?.nickname} have ${wins} wins and ${losses} losses. `
+            } else {
+                opening = `The ${pTeam?.nickname} didn't play any games this week. `
+            }
+            let response: string = `For the season they are ${pRecord?.w}-${pRecord?.l} that's a winning percentage of ${Number(pRecord?.pct).toFixed(2)}. `
             let streak: string = ''
-            if(csvTeamRecord.streak > 0) {
-                streak = `The ${csvTeam.nickname} are currently on a ${csvTeamRecord.streak} winning streak. `
+            if(pRecord?.streak > 0) {
+                streak = `The ${pTeam?.nickname} are currently on a ${pRecord?.streak} winning streak. `
             };
             let gb: string = ''
-            if(csvTeamRecord.gb > 0) {
-                gb = `They are ${Number(csvTeamRecord.gb).toFixed(2)} behind the division leader.`
+            if(pRecord?.gb > 0) {
+                gb = `They are ${Number(pRecord?.gb).toFixed(2)} behind the division leader.`
             } else {
                 gb = 'They are in first place in their division.'
             };
 
-            const description = response.concat(streak, gb)
+            response = opening.concat(response);
+            const description = response.concat(streak, gb);
+
             const embed = new EmbedBuilder()
-                .setTitle(`This week in ${csvTeam.nickname} News`)
+                .setTitle(`This week in ${pTeam?.nickname} News`)
                 .setDescription(description)
                 .setFields(gameLines)
                 .setColor('#0099ff');
-
+            
+            await prisma.$disconnect();
             await interaction.editReply({ embeds: [embed] })
         } catch (err) {
             console.error(err);

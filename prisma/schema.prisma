@@ -1,0 +1,406 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model divisions {
+  league_id     Int
+  sub_league_id Int
+  division_id   Int
+  name          String? @db.VarChar(50)
+  gender        Int?
+
+  @@id([league_id, sub_league_id, division_id])
+}
+
+model games {
+  game_id         Int       @id
+  league_id       Int?
+  home_team       Int?
+  away_team       Int?
+  attendance      Int?
+  date            DateTime? @db.Date
+  time            Int?      @db.SmallInt
+  game_type       Int?      @db.SmallInt
+  played          Int?      @db.TinyInt
+  innings         Int?      @db.SmallInt
+  runs0           Int?      @db.SmallInt
+  runs1           Int?      @db.SmallInt
+  hits0           Int?      @db.SmallInt
+  hits1           Int?      @db.SmallInt
+  errors0         Int?      @db.SmallInt
+  errors1         Int?      @db.SmallInt
+  winning_pitcher Int?
+  losing_pitcher  Int?
+  save_pitcher    Int?
+  starter0        Int?
+  starter1        Int?
+}
+
+model leagues {
+  league_id                              Int       @id
+  name                                   String?   @db.VarChar(50)
+  abbr                                   String?   @db.VarChar(50)
+  nation_id                              Int?
+  language_id                            Int?
+  gender                                 Int?
+  historical_league                      Int?      @db.TinyInt
+  logo_file_name                         String?   @db.VarChar(200)
+  players_path                           String?   @db.VarChar(200)
+  start_date                             DateTime? @db.Date
+  preferred_start_date                   DateTime? @db.Date
+  pitcher_award_name                     String?   @db.VarChar(50)
+  mvp_award_name                         String?   @db.VarChar(50)
+  rookie_award_name                      String?   @db.VarChar(50)
+  defense_award_name                     String?   @db.VarChar(50)
+  fictional_players                      Int?      @db.TinyInt
+  start_fantasy_draft                    Int?      @db.TinyInt
+  trading_deadline                       Int?      @db.TinyInt
+  winter_meetings                        Int?      @db.TinyInt
+  arbitration_offering                   Int?      @db.TinyInt
+  show_draft_pool                        Int?      @db.TinyInt
+  rosters_expanded                       Int?      @db.TinyInt
+  draft_date                             DateTime? @db.Date
+  rule_5_draft_date                      DateTime? @db.Date
+  international_fa_date                  DateTime? @db.Date
+  roster_expand_date                     DateTime? @db.Date
+  trade_deadline_date                    DateTime? @db.Date
+  allstar_date                           DateTime? @db.Date
+  days_until_deadline                    Int?
+  next_draft_type                        Int?
+  parent_league_id                       Int?
+  league_state                           Int?      @db.SmallInt
+  season_year                            Int?
+  historical_year                        Int?      @db.SmallInt
+  league_level                           Int?      @db.SmallInt
+  stats_detail                           Int?
+  historical_import_path                 String?   @db.VarChar(200)
+  foreigner_percentage                   Int?      @db.SmallInt
+  was_ootp6                              Int?      @db.TinyInt
+  was_65                                 Int?      @db.TinyInt
+  allstar_game                           Int?      @db.TinyInt
+  auto_schedule_allstar                  Int?      @db.TinyInt
+  allstar_team_id0                       Int?
+  allstar_team_id1                       Int?
+  schedule_file_1                        String?   @db.VarChar(200)
+  schedule_file_2                        String?   @db.VarChar(200)
+  rules_rule_5                           Int?      @db.TinyInt
+  rules_minor_league_options             Int?      @db.TinyInt
+  rules_trading                          Int?      @db.TinyInt
+  rules_trading_deadline_events          Int?      @db.SmallInt
+  rules_draft_pick_trading               Int?      @db.TinyInt
+  rules_financials                       Int?      @db.TinyInt
+  rules_amateur_draft                    Int?      @db.TinyInt
+  rules_fa_compensation                  Int?      @db.SmallInt
+  rules_schedule_balanced                Int?      @db.TinyInt
+  rules_schedule_inter_league            Int?      @db.TinyInt
+  rules_schedule_force_start_day         Int?      @db.TinyInt
+  rules_trades_other_leagues             Int?      @db.TinyInt
+  rules_free_agents_from_other_leagues   Int?      @db.TinyInt
+  rules_free_agents_leave_other_leagues  Int?      @db.TinyInt
+  rules_allstar_game                     Int?      @db.TinyInt
+  rules_spring_training                  Int?      @db.TinyInt
+  rules_active_roster_limit              Int?      @db.SmallInt
+  rules_secondary_roster_limit           Int?      @db.SmallInt
+  rules_expanded_roster_limit            Int?      @db.SmallInt
+  rules_min_service_days                 Int?      @db.SmallInt
+  rules_waiver_period_length             Int?      @db.SmallInt
+  rules_dfa_period_length                Int?      @db.SmallInt
+  rules_fa_minimum_years                 Int?      @db.SmallInt
+  rules_salary_arbitration_minimum_years Int?      @db.SmallInt
+  rules_minor_league_fa_minimum_years    Int?      @db.SmallInt
+  rules_foreigner_limit                  Int?      @db.SmallInt
+  rules_foreigner_pitcher_limit          Int?      @db.SmallInt
+  rules_foreigner_hitter_limit           Int?      @db.SmallInt
+  rules_schedule_games_per_team          Int?      @db.SmallInt
+  rules_schedule_typical_series          Int?      @db.SmallInt
+  rules_schedule_game_times              Int?      @db.SmallInt
+  rules_schedule_preferred_start_day     Int?      @db.SmallInt
+  rules_amateur_draft_rounds             Int?      @db.SmallInt
+  rules_minimum_salary                   Int?
+  rules_salary_cap                       Int?
+  rules_player_salary0                   Int?
+  rules_player_salary1                   Int?
+  rules_player_salary2                   Int?
+  rules_player_salary3                   Int?
+  rules_player_salary4                   Int?
+  rules_player_salary5                   Int?
+  rules_player_salary6                   Int?
+  rules_player_salary7                   Int?
+  rules_average_coach_salary             Int?
+  rules_average_attendance               Int?
+  rules_average_national_media_contract  Int?
+  rules_cash_maximum                     Int?
+  rules_average_ticket_price             Float?
+  rules_luxury_sharing                   Int?      @db.TinyInt
+  rules_revenue_sharing                  Int?      @db.TinyInt
+  rules_revenue_sharing_tax              Int?      @db.SmallInt
+  rules_luxury_sharing_cap               Int?      @db.SmallInt
+  rules_luxury_tax                       Int?      @db.SmallInt
+  rules_national_media_contract_fixed    Int?      @db.TinyInt
+  rules_owner_decides_budget             Int?      @db.TinyInt
+  rules_schedule_auto_adjust_dates       Int?      @db.TinyInt
+  rules_historical_import_rookies        Int?      @db.TinyInt
+  avg_rating_contact                     Int?
+  avg_rating_gap                         Int?
+  avg_rating_power                       Int?
+  avg_rating_eye                         Int?
+  avg_rating_strikeouts                  Int?
+  avg_rating_stuff                       Int?
+  avg_rating_movement                    Int?
+  avg_rating_control                     Int?
+  avg_rating_fielding0                   Int?
+  avg_rating_fielding1                   Int?
+  avg_rating_fielding2                   Int?
+  avg_rating_fielding3                   Int?
+  avg_rating_fielding4                   Int?
+  avg_rating_fielding5                   Int?
+  avg_rating_fielding6                   Int?
+  avg_rating_fielding7                   Int?
+  avg_rating_fielding8                   Int?
+  avg_rating_fielding9                   Int?
+  avg_rating_overall                     Int?
+  avg_rating_age                         Float?
+  league_totals_ab                       Int?
+  league_totals_h                        Int?
+  league_totals_d                        Int?
+  league_totals_t                        Int?
+  league_totals_hr                       Int?
+  league_totals_bb                       Int?
+  league_totals_hp                       Int?
+  league_totals_k                        Int?
+  league_totals_pa                       Int?
+  league_totals_babip                    Float?
+  league_totals_mod_h                    Float?
+  league_totals_mod_d                    Float?
+  league_totals_mod_t                    Float?
+  league_totals_mod_hr                   Float?
+  league_totals_mod_bb                   Float?
+  league_totals_mod_hp                   Float?
+  league_totals_mod_k                    Float?
+  league_totals_mod_babip                Float?
+  ml_equivalencies_avg                   Float?
+  ml_equivalencies_hr                    Float?
+  ml_equivalencies_eb                    Float?
+  ml_equivalencies_bb                    Float?
+  ml_equivalencies_k                     Float?
+  ml_equivalencies_hp                    Float?
+  player_creation_modifier_contact       Float?
+  player_creation_modifier_gap           Float?
+  player_creation_modifier_power         Float?
+  player_creation_modifier_eye           Float?
+  player_creation_modifier_strikeouts    Float?
+  player_creation_modifier_stuff         Float?
+  player_creation_modifier_movement      Float?
+  player_creation_modifier_control       Float?
+  player_creation_modifier_speed         Float?
+  player_creation_modifier_fielding      Float?
+  financial_coefficient                  Float?
+  world_start_year                       Int?
+  current_date                           DateTime? @db.Date
+  background_color_id                    String?   @db.VarChar(8)
+  text_color_id                          String?   @db.VarChar(8)
+  scouting_coach_id                      Int?
+}
+
+model messages {
+  message_id       Int       @id
+  subject          String?   @db.VarChar(255)
+  player_id_0      Int?
+  player_id_1      Int?
+  player_id_2      Int?
+  player_id_3      Int?
+  player_id_4      Int?
+  player_id_5      Int?
+  player_id_6      Int?
+  player_id_7      Int?
+  player_id_8      Int?
+  player_id_9      Int?
+  team_id_0        Int?
+  team_id_1        Int?
+  team_id_2        Int?
+  team_id_3        Int?
+  team_id_4        Int?
+  league_id_0      Int?
+  league_id_1      Int?
+  importance       Int?
+  message_type     Int?
+  hype             Int?      @db.SmallInt
+  sender_type      Int?
+  sender_id        Int?
+  recipient_id     Int?
+  trade_id         Int?
+  date             DateTime? @db.Date
+  deleted          Int?      @db.TinyInt
+  notify           Int?      @db.TinyInt
+  ongoing_story_id Int?
+  text_is_modified Int?      @db.TinyInt
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model players {
+  player_id                   Int       @id
+  team_id                     Int?
+  league_id                   Int?
+  position                    Int?      @db.SmallInt
+  role                        Int?      @db.SmallInt
+  first_name                  String?   @db.VarChar(50)
+  last_name                   String?   @db.VarChar(50)
+  nick_name                   String?   @db.VarChar(50)
+  age                         Int?      @db.SmallInt
+  date_of_birth               DateTime? @db.Date
+  city_of_birth_id            Int?
+  nation_id                   Int?
+  second_nation_id            Int?
+  weight                      Int?      @db.SmallInt
+  height                      Int?      @db.SmallInt
+  retired                     Int?      @db.TinyInt
+  free_agent                  Int?      @db.TinyInt
+  last_league_id              Int?
+  last_team_id                Int?
+  organization_id             Int?
+  last_organization_id        Int?
+  language_ids0               Int?
+  language_ids1               Int?
+  uniform_number              Int?      @db.SmallInt
+  experience                  Int?      @db.SmallInt
+  person_type                 Int?      @db.SmallInt
+  bats                        Int?      @db.SmallInt
+  throws                      Int?      @db.SmallInt
+  personality_greed           Int?      @db.SmallInt
+  personality_loyalty         Int?      @db.SmallInt
+  personality_play_for_winner Int?      @db.SmallInt
+  personality_work_ethic      Int?      @db.SmallInt
+  personality_intelligence    Int?      @db.SmallInt
+  personality_leader          Int?      @db.SmallInt
+  historical_id               String?   @db.VarChar(50)
+  historical_team_id          String?   @db.VarChar(50)
+  best_contract_offer_id      Int?
+  injury_is_injured           Int?      @db.TinyInt
+  injury_dtd_injury           Int?      @db.TinyInt
+  injury_career_ending        Int?      @db.TinyInt
+  injury_dl_left              Int?      @db.SmallInt
+  injury_dl_playoff_round     Int?      @db.SmallInt
+  injury_left                 Int?      @db.SmallInt
+  dtd_injury_effect           Int?      @db.SmallInt
+  dtd_injury_effect_hit       Int?      @db.SmallInt
+  dtd_injury_effect_throw     Int?      @db.SmallInt
+  dtd_injury_effect_run       Int?      @db.SmallInt
+  injury_id                   Int?      @db.SmallInt
+  injury_id2                  Int?      @db.SmallInt
+  injury_dtd_injury2          Int?      @db.TinyInt
+  injury_left2                Int?      @db.SmallInt
+  dtd_injury_effect2          Int?      @db.SmallInt
+  dtd_injury_effect_hit2      Int?      @db.SmallInt
+  dtd_injury_effect_throw2    Int?      @db.SmallInt
+  dtd_injury_effect_run2      Int?      @db.SmallInt
+  prone_overall               Int?      @db.SmallInt
+  prone_leg                   Int?      @db.SmallInt
+  prone_back                  Int?      @db.SmallInt
+  prone_arm                   Int?      @db.SmallInt
+  fatigue_pitches0            Int?      @db.SmallInt
+  fatigue_pitches1            Int?      @db.SmallInt
+  fatigue_pitches2            Int?      @db.SmallInt
+  fatigue_pitches3            Int?      @db.SmallInt
+  fatigue_pitches4            Int?      @db.SmallInt
+  fatigue_pitches5            Int?      @db.SmallInt
+  fatigue_points              Int?      @db.SmallInt
+  fatigue_played_today        Int?      @db.TinyInt
+  running_ratings_speed       Int?      @db.SmallInt
+  running_ratings_stealing    Int?      @db.SmallInt
+  running_ratings_baserunning Int?      @db.SmallInt
+  college                     Int?      @db.TinyInt
+  acquired                    Int?      @db.SmallInt
+  acquired_date               DateTime? @db.Date
+  draft_year                  Int?      @db.SmallInt
+  draft_round                 Int?      @db.SmallInt
+  draft_supplemental          Int?      @db.TinyInt
+  draft_pick                  Int?      @db.SmallInt
+  draft_overall_pick          Int?      @db.SmallInt
+  draft_eligible              Int?      @db.TinyInt
+  hsc_status                  Int?      @db.SmallInt
+  redshirt                    Int?      @db.TinyInt
+  picked_in_draft             Int?      @db.TinyInt
+  school                      Int?      @db.SmallInt
+  commit_school               Int?      @db.SmallInt
+  hidden                      Int?      @db.TinyInt
+  draft_league_id             Int?
+  draft_team_id               Int?
+  turned_coach                Int?      @db.TinyInt
+  hall_of_fame                Int?      @db.TinyInt
+  rust                        Int?      @db.SmallInt
+  inducted                    Int?      @db.SmallInt
+  strategy_override_team      Int?      @db.TinyInt
+  strategy_stealing           Int?
+  strategy_running            Int?
+  strategy_bunt_for_hit       Int?
+  strategy_sac_bunt           Int?
+  strategy_hit_run            Int?
+  strategy_hook_start         Int?
+  strategy_hook_relief        Int?
+  strategy_pitch_count        Int?
+  strategy_pitch_around       Int?
+  strategy_never_pinch_hit    Int?      @db.TinyInt
+  strategy_defensive_sub      Int?      @db.TinyInt
+  strategy_dtd_sit_min        Int?      @db.TinyInt
+  strategy_dtd_allow_ph       Int?      @db.TinyInt
+  local_pop                   Int?      @db.SmallInt
+  national_pop                Int?      @db.SmallInt
+  draft_protected             Int?      @db.TinyInt
+  morale                      Int?      @db.SmallInt
+  morale_player_performance   Int?      @db.SmallInt
+  morale_team_performance     Int?      @db.SmallInt
+  morale_team_transactions    Int?      @db.SmallInt
+  expectation                 Int?      @db.SmallInt
+  morale_player_role          Int?      @db.SmallInt
+  on_loan                     Int?      @db.TinyInt
+  loan_league_id              Int?
+  loan_team_id                Int?
+}
+
+model team_record {
+  team_id      Int    @id
+  g            Int?   @db.SmallInt
+  w            Int?   @db.SmallInt
+  l            Int?   @db.SmallInt
+  t            Int?   @db.SmallInt
+  pos          Int?   @db.SmallInt
+  pct          Float?
+  gb           Float?
+  streak       Int?   @db.SmallInt
+  magic_number Int?   @db.SmallInt
+}
+
+model teams {
+  team_id                     Int     @id
+  name                        String? @db.VarChar(50)
+  abbr                        String? @db.VarChar(50)
+  nickname                    String? @db.VarChar(50)
+  logo_file_name              String? @db.VarChar(200)
+  city_id                     Int?
+  park_id                     Int?
+  league_id                   Int?
+  sub_league_id               Int?
+  division_id                 Int?
+  nation_id                   Int?
+  parent_team_id              Int?
+  level                       Int?
+  prevent_any_moves           Int?    @db.TinyInt
+  human_team                  Int?    @db.TinyInt
+  human_id                    Int?
+  gender                      Int?
+  background_color_id         String? @db.VarChar(8)
+  text_color_id               String? @db.VarChar(8)
+  ballcaps_main_color_id      String? @db.VarChar(8)
+  ballcaps_visor_color_id     String? @db.VarChar(8)
+  jersey_main_color_id        String? @db.VarChar(8)
+  jersey_away_color_id        String? @db.VarChar(8)
+  jersey_secondary_color_id   String? @db.VarChar(8)
+  jersey_pin_stripes_color_id String? @db.VarChar(8)
+  allstar_team                Int?    @db.TinyInt
+  historical_id               String? @db.VarChar(50)
+}

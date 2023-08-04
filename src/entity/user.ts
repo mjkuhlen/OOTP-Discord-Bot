@@ -12,5 +12,5 @@ export class User {
     ready!: boolean;
 
     @Column({nullable: true})
-    gameDate!: string;
+    gameDate!: Date;
 }
