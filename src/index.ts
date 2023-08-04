@@ -30,7 +30,7 @@ async function initialize() {
             }
         });
         const date: any = leagues?.current_date;
-        const gamedate = dayjs(date);
+        const gamedate = dayjs(date).toDate();
 
         const userRepo = AppDataSource.getRepository(User);
 
@@ -43,17 +43,17 @@ async function initialize() {
         };
 
         const dbDate = await dateRepo.findOneByOrFail({id: 1});
-        const checkDate = dayjs(dbDate.date);
+        const checkDate = dayjs(dbDate.date).toDate();
 
         console.log(`dbDate - ${dbDate.date}`)
         console.log(`gameDate - ${gamedate}`)
         
         if(checkDate !== gamedate) {
-            dbDate.date = gamedate.toDate();
+            dbDate.date = gamedate;
             await dateRepo.save(dbDate);
             const users:User[] = await userRepo.find();
             users.map((user) => {
-                user.gameDate = gamedate.toDate();
+                user.gameDate = gamedate;
                 user.ready = false;
                 userRepo.save(user);
             })
