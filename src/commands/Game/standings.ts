@@ -26,8 +26,8 @@ export default new client.command({
 					{ name: 'West', value: '2' },
                 )),
     run: async (client, interaction) => {
+		const prisma = new PrismaClient();
         try {
-			const prisma = new PrismaClient();
 			const leagueValue = interaction.options.getString('league');
 			const divisionValue = interaction.options.getString('division');
 
@@ -123,11 +123,11 @@ export default new client.command({
 				.setDescription(replyContent)
 				.setColor('#0099ff');
 
-			await prisma.$disconnect();
 			await interaction.reply({ embeds: [embed] });
         } catch (err) {
             console.error('Error Occured:', err);
 			await interaction.editReply({content: 'Something went wrong. Simbot is sad.'})
         }
+		await prisma.$disconnect();
     }
 })

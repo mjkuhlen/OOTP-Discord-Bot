@@ -10,8 +10,8 @@ export default new client.command({
         .setName('gamedate')
         .setDescription('Replies with the current game date.'),
     run: async (client, interaction) => {
+        const prisma = new PrismaClient();
         try {
-            const prisma = new PrismaClient();
             const league_id = 200
             const leagues = await prisma.leagues.findFirst({
                 where: {
@@ -26,11 +26,11 @@ export default new client.command({
                 .setDescription(`The current game date is: ${dayjs(date).format('MMMM D, YYYY')}`)
                 .setColor('#0099ff');
     
-            await prisma.$disconnect();
             await interaction.reply({ embeds: [embed] })
         } catch (err) {
             console.error(err);
             await interaction.reply({content: 'Something went wrong. Simbot is sad.'})
         }
+        await prisma.$disconnect();
     }
 });

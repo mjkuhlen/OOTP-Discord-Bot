@@ -10,12 +10,12 @@ export default new client.command({
     .setName('news')
     .setDescription('Replies with the latest league news.'),
     run: async (client, interaction) => {
+        const prisma = new PrismaClient();
         try {
             const dateRepo = AppDataSource.getRepository(GameDate);
             const gameDate = await dateRepo.findOne({where: {id: 1}});
             const previousWeek = dayjs(gameDate?.date).subtract(8, 'days').toDate();
 
-            const prisma = new PrismaClient();
             const pNews = await prisma.messages.findMany({
                 where: {league_id_0: 200, date: {
                     gte: previousWeek
@@ -44,5 +44,6 @@ export default new client.command({
             console.error(err);
             await interaction.reply({content: 'Something went wrong. Simbot is sad.'})
         }
+        await prisma.$disconnect()
     }
 })
