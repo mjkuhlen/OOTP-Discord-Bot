@@ -68,6 +68,7 @@ async function initialize() {
         } else {
             console.log('Checking for new data.')
         }
+        prisma.$disconnect();
     }, 60 * 1000)
 }
 
