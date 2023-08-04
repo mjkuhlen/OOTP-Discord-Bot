@@ -47,7 +47,7 @@ export default new client.command({
 
             const dateRepo = AppDataSource.getRepository(GameDate);
             const gameDate = await dateRepo.findOne({where: {id: 1}});
-            const currentDate = dayjs(gameDate?.date).add(1, 'day').toDate();
+            const currentDate = dayjs(gameDate?.date).toDate();
             const previousWeek = dayjs(gameDate?.date).subtract(8, 'days').toDate();
 
             const pTeam:any = await prisma.teams.findFirst({where: {
