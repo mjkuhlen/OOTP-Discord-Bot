@@ -30,7 +30,7 @@ async function initialize() {
             }
         });
         const date: any = leagues?.current_date;
-        const gamedate = dayjs(date).toDate();
+        const gamedate = date;
 
         const userRepo = AppDataSource.getRepository(User);
 
@@ -43,7 +43,7 @@ async function initialize() {
         };
 
         const dbDate = await dateRepo.findOneByOrFail({id: 1});
-        const checkDate = dayjs(dbDate.date).toDate();
+        const checkDate = dbDate.date;
 
         console.log(`dbDate - ${dbDate.date}`)
         console.log(`gameDate - ${gamedate}`)
