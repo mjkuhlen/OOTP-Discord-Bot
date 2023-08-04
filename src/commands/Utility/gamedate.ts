@@ -19,7 +19,7 @@ export default new client.command({
                 }
             });
     
-            const date = dayjs(leagues?.current_date).add(1, 'day');
+            const date = dayjs(leagues?.current_date);
             
             const embed = new EmbedBuilder()
                 .setTitle('Current Game Date')
