@@ -84,6 +84,7 @@ export default new client.command({
                 }
             });
 
+            if(pGames.length > 0 ) {
             await Promise.all(pGames.map(async (game:any) => {
                 const winningPitcher = await prisma.players.findFirst({
                     where: {
@@ -150,7 +151,7 @@ export default new client.command({
 
                 gameLines.push(newGame);
 
-            }));
+            }));}
 
             let opening: string = '';
 
