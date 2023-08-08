@@ -1,4 +1,4 @@
-﻿-- CreateTable
+-- CreateTable
 CREATE TABLE `divisions` (
     `league_id` INTEGER NOT NULL,
     `sub_league_id` INTEGER NOT NULL,
@@ -414,3 +414,5 @@ CREATE TABLE `teams` (
     PRIMARY KEY (`team_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- AddForeignKey
+ALTER TABLE `team_record` ADD CONSTRAINT `team_record_team_id_fkey` FOREIGN KEY (`team_id`) REFERENCES `teams`(`team_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
