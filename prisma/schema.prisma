@@ -39,6 +39,13 @@ model games {
   save_pitcher    Int?
   starter0        Int?
   starter1        Int?
+  homeTeam        teams?   @relation("HomeTeam", fields: [home_team], references: [team_id])
+  awayTeam        teams?   @relation("AwayTeam", fields: [away_team], references: [team_id])
+  winningPitcher  players? @relation("WinningPitcher", fields: [winning_pitcher], references: [player_id])
+  losingPitcher   players? @relation("LosingPitcher", fields: [losing_pitcher], references: [player_id])
+  savePitcher     players? @relation("SavePitcher", fields: [save_pitcher], references: [player_id])
+  starter0Player  players? @relation("Starter0", fields: [starter0], references: [player_id])
+  starter1Player  players? @relation("Starter1", fields: [starter1], references: [player_id])
 }
 
 model leagues {
@@ -360,10 +367,15 @@ model players {
   on_loan                     Int?      @db.TinyInt
   loan_league_id              Int?
   loan_team_id                Int?
+  gamesAsWinningPitcher       games[] @relation("WinningPitcher")
+  gamesAsLosingPitcher        games[] @relation("LosingPitcher")
+  gamesAsSavePitcher          games[] @relation("SavePitcher")
+  gamesAsStarter0             games[] @relation("Starter0")
+  gamesAsStarter1             games[] @relation("Starter1")
 }
 
 model team_record {
-  team_id      Int    @id
+  team_id      Int    @id @unique
   g            Int?   @db.SmallInt
   w            Int?   @db.SmallInt
   l            Int?   @db.SmallInt
@@ -373,6 +385,7 @@ model team_record {
   gb           Float?
   streak       Int?   @db.SmallInt
   magic_number Int?   @db.SmallInt
+  team         teams  @relation(fields: [team_id], references: [team_id])
 }
 
 model teams {
@@ -403,4 +416,7 @@ model teams {
   jersey_pin_stripes_color_id String? @db.VarChar(8)
   allstar_team                Int?    @db.TinyInt
   historical_id               String? @db.VarChar(50)
+  team_record                 team_record?
+  homeGames                   games[] @relation("HomeTeam")
+  awayGames                   games[] @relation("AwayTeam")
 }

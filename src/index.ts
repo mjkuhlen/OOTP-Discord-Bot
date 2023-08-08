@@ -29,6 +29,7 @@ async function initialize() {
                 league_id: league_id
             }
         });
+        prisma.$disconnect();
         const date: any = leagues?.current_date;
         const gamedate = dayjs(date).format('MMMM D YYYY');
 
@@ -68,7 +69,6 @@ async function initialize() {
         } else {
             console.log('Checking for new data.')
         }
-        prisma.$disconnect();
     }, 60 * 1000)
 }
 
