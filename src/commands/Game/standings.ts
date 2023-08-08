@@ -30,55 +30,45 @@ export default new client.command({
         try {
 			const leagueValue = interaction.options.getString('league');
 			const divisionValue = interaction.options.getString('division');
+			const league_id = 200;
 
 			//get the teams from sql that matches the league and division values
 			const pTeams = await prisma.teams.findMany({
-				where: {league_id: 200, sub_league_id: Number(leagueValue), division_id: Number(divisionValue), allstar_team: 0},
+				where: {league_id: league_id, sub_league_id: Number(leagueValue), division_id: Number(divisionValue), allstar_team: 0},
 				select: {
 					team_id: true,
-					nickname: true
-				}
-			});
-
-			//create a list of the team_ids
-			const teamList:any = [];
-			pTeams.map((team:any) => {
-				teamList.push(team.team_id)
-			})
-
-			//use team_ids to query team records
-			const pRecrods = await prisma.team_record.findMany({
-				where: {
-					team_id: { in: teamList}
+					nickname: true,
+					team_record: {
+						select: {
+							g: true,
+							w: true,
+							l: true,
+							gb: true,
+							pos: true,
+							pct: true,
+							streak: true,
+							magic_number: true
+						}
+					}
 				},
-				select: {
-					team_id: true,
-					g: true,
-					w: true,
-					l: true,
-					gb: true,
-					pos: true,
+				orderBy: {
+					team_record: {
+						pos: 'asc'
+					}
 				}
 			});
 
-			//merge the team and team_records data together
-			const mData = pTeams.map((team:any) => {
-				const teamRecord = pRecrods.find((record:any) => record.team_id === team.team_id);
-				return { ...team, ...teamRecord}
-			});
-
-			//sort the data by the position column
-			const sData = mData.sort((a:any, b:any) => a.pos - b.pos);
+			await prisma.$disconnect();
 
 			//create the rows for the table
 			const newTableRows: any = [];
-			sData.forEach((team:any) => {
-				const row = `${team.nickname.padEnd(10)} | ${team.g.toString().padEnd(5)} | ${team.w.toString().padEnd(4)} | ${team.l.toString().padEnd(6)} | ${team.gb.toString().padEnd(6)}`;
+			pTeams.forEach((team:any) => {
+				const row = `${team.nickname.padEnd(10)} | ${team.team_record.g.toString().padEnd(5)} | ${team.team_record.w.toString().padEnd(4)} | ${team.team_record.l.toString().padEnd(6)} | ${team.team_record.gb.toString().padEnd(2)} | ${team.team_record.streak.toString().padEnd(6)} | ${team.team_record.magic_number.toString().padEnd(6)}`;
 				newTableRows.push(row);
 			});
 
 			// Create the table header
-			const tableHeader = 'Nickname   | Games | Wins | Losses | GB\n-----------|-------|------|--------|------';
+			const tableHeader = 'Nickname   | Games | Wins | Losses | GB | Streak | Magic #\n-----------|-------|------|--------|----|--------|--------';
 
 			// Combine the table header and rows to create the complete table string
   			const table = `\`\`\`\n${tableHeader}\n${newTableRows.join('\n')}\n\`\`\``;
@@ -128,6 +118,5 @@ export default new client.command({
             console.error('Error Occured:', err);
 			await interaction.editReply({content: 'Something went wrong. Simbot is sad.'})
         }
-		await prisma.$disconnect();
     }
 })
