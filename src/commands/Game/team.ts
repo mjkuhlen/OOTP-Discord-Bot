@@ -119,7 +119,7 @@ export default new client.command({
                     hits1: true
                 }
             });
-
+            prisma.$disconnect();
             let headlines:any = [];
             games.map((headline: any) => {
                 headlines.push(
