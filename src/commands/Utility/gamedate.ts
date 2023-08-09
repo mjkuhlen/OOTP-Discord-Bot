@@ -1,7 +1,5 @@
 import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
 import { client } from "../..";
-import readCSV from '../../utilities/readCSV'
-import path from 'path'
 import dayjs from "dayjs";
 import { PrismaClient } from '@prisma/client';
 

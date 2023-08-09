@@ -1,12 +1,7 @@
 import { EmbedBuilder, SlashCommandBuilder, codeBlock } from "discord.js";
 import { client } from "../..";
-import path from "path";
-import readCSV from "../../utilities/readCSV";
-import { AppDataSource } from "../../datasource";
-import { GameDate } from "../../entity/gamedate";
 import dayjs from "dayjs";
 import { PrismaClient } from "@prisma/client";
-import { TreeLevelColumn } from "typeorm";
 
 export default new client.command({
     structure: new SlashCommandBuilder()

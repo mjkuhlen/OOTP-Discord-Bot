@@ -248,7 +248,6 @@ model messages {
   text_is_modified Int?      @db.TinyInt
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model players {
   player_id                   Int       @id
   team_id                     Int?
