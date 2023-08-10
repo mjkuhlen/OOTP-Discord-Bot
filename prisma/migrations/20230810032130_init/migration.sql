@@ -378,6 +378,7 @@ CREATE TABLE `team_record` (
     `streak` SMALLINT NULL,
     `magic_number` SMALLINT NULL,
 
+    UNIQUE INDEX `team_record_team_id_key`(`team_id`),
     PRIMARY KEY (`team_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -414,5 +415,154 @@ CREATE TABLE `teams` (
     PRIMARY KEY (`team_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- CreateTable
+CREATE TABLE `players_career_batting_stats` (
+    `player_id` INTEGER NOT NULL,
+    `year` SMALLINT NULL,
+    `team_id` INTEGER NULL,
+    `game_id` INTEGER NULL,
+    `league_id` INTEGER NULL,
+    `level_id` SMALLINT NULL,
+    `split_id` SMALLINT NULL,
+    `position` SMALLINT NULL,
+    `ab` SMALLINT NULL,
+    `h` SMALLINT NULL,
+    `k` SMALLINT NULL,
+    `pa` SMALLINT NULL,
+    `pitches_seen` SMALLINT NULL,
+    `g` SMALLINT NULL,
+    `gs` SMALLINT NULL,
+    `d` SMALLINT NULL,
+    `t` SMALLINT NULL,
+    `hr` SMALLINT NULL,
+    `r` SMALLINT NULL,
+    `rbi` SMALLINT NULL,
+    `sb` SMALLINT NULL,
+    `cs` SMALLINT NULL,
+    `bb` SMALLINT NULL,
+    `ibb` SMALLINT NULL,
+    `gdp` SMALLINT NULL,
+    `sh` SMALLINT NULL,
+    `sf` SMALLINT NULL,
+    `hp` SMALLINT NULL,
+    `ci` SMALLINT NULL,
+    `wpa` DOUBLE NULL,
+    `stint` SMALLINT NULL,
+    `ubr` DOUBLE NULL,
+    `war` DOUBLE NULL,
+
+    PRIMARY KEY (`player_id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `players_career_pitching_stats` (
+    `player_id` INTEGER NOT NULL,
+    `year` SMALLINT NULL,
+    `team_id` INTEGER NULL,
+    `game_id` INTEGER NULL,
+    `league_id` INTEGER NULL,
+    `level_id` SMALLINT NULL,
+    `split_id` SMALLINT NULL,
+    `ip` SMALLINT NULL,
+    `ab` SMALLINT NULL,
+    `tb` SMALLINT NULL,
+    `ha` SMALLINT NULL,
+    `k` SMALLINT NULL,
+    `bf` SMALLINT NULL,
+    `rs` SMALLINT NULL,
+    `bb` SMALLINT NULL,
+    `r` SMALLINT NULL,
+    `er` SMALLINT NULL,
+    `gb` SMALLINT NULL,
+    `fb` SMALLINT NULL,
+    `pi` SMALLINT NULL,
+    `ipf` SMALLINT NULL,
+    `g` SMALLINT NULL,
+    `gs` SMALLINT NULL,
+    `w` SMALLINT NULL,
+    `l` SMALLINT NULL,
+    `s` SMALLINT NULL,
+    `sa` SMALLINT NULL,
+    `da` SMALLINT NULL,
+    `sh` SMALLINT NULL,
+    `sf` SMALLINT NULL,
+    `ta` SMALLINT NULL,
+    `hra` SMALLINT NULL,
+    `bk` SMALLINT NULL,
+    `ci` SMALLINT NULL,
+    `iw` SMALLINT NULL,
+    `wp` SMALLINT NULL,
+    `hp` SMALLINT NULL,
+    `gf` SMALLINT NULL,
+    `dp` SMALLINT NULL,
+    `qs` SMALLINT NULL,
+    `svo` SMALLINT NULL,
+    `bs` SMALLINT NULL,
+    `ra` SMALLINT NULL,
+    `cg` SMALLINT NULL,
+    `sho` SMALLINT NULL,
+    `sb` SMALLINT NULL,
+    `cs` SMALLINT NULL,
+    `hld` SMALLINT NULL,
+    `ir` DOUBLE NULL,
+    `irs` DOUBLE NULL,
+    `wpa` DOUBLE NULL,
+    `li` DOUBLE NULL,
+    `stint` SMALLINT NULL,
+    `outs` SMALLINT NULL,
+    `sd` SMALLINT NULL,
+    `md` SMALLINT NULL,
+    `war` DOUBLE NULL,
+    `ra9war` DOUBLE NULL,
+
+    PRIMARY KEY (`player_id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `players_league_leader` (
+    `player_id` INTEGER NOT NULL,
+    `league_id` INTEGER NULL,
+    `sub_league_id` SMALLINT NULL,
+    `year` SMALLINT NULL,
+    `category` SMALLINT NULL,
+    `place` SMALLINT NULL,
+    `amount` DOUBLE NULL,
+
+    PRIMARY KEY (`player_id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `games` ADD CONSTRAINT `games_home_team_fkey` FOREIGN KEY (`home_team`) REFERENCES `teams`(`team_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `games` ADD CONSTRAINT `games_away_team_fkey` FOREIGN KEY (`away_team`) REFERENCES `teams`(`team_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `games` ADD CONSTRAINT `games_winning_pitcher_fkey` FOREIGN KEY (`winning_pitcher`) REFERENCES `players`(`player_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `games` ADD CONSTRAINT `games_losing_pitcher_fkey` FOREIGN KEY (`losing_pitcher`) REFERENCES `players`(`player_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `games` ADD CONSTRAINT `games_save_pitcher_fkey` FOREIGN KEY (`save_pitcher`) REFERENCES `players`(`player_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `games` ADD CONSTRAINT `games_starter0_fkey` FOREIGN KEY (`starter0`) REFERENCES `players`(`player_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `games` ADD CONSTRAINT `games_starter1_fkey` FOREIGN KEY (`starter1`) REFERENCES `players`(`player_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `players` ADD CONSTRAINT `players_team_id_fkey` FOREIGN KEY (`team_id`) REFERENCES `teams`(`team_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
 -- AddForeignKey
 ALTER TABLE `team_record` ADD CONSTRAINT `team_record_team_id_fkey` FOREIGN KEY (`team_id`) REFERENCES `teams`(`team_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `players_career_batting_stats` ADD CONSTRAINT `players_career_batting_stats_player_id_fkey` FOREIGN KEY (`player_id`) REFERENCES `players`(`player_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `players_career_pitching_stats` ADD CONSTRAINT `players_career_pitching_stats_player_id_fkey` FOREIGN KEY (`player_id`) REFERENCES `players`(`player_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `players_league_leader` ADD CONSTRAINT `players_league_leader_player_id_fkey` FOREIGN KEY (`player_id`) REFERENCES `players`(`player_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
