@@ -11,12 +11,7 @@ services:
       - MYSQL_DATABASE=$DATABASE_NAME
     volumes:
       - db:/var/lib/mysql
-      - type: bind
-        source: ./scripts
-        target: /home/kuhlen/scripts
-      - type: bind
-        source: ./sql-files
-        target: /home/kuhlen/sql
+      - scripts:/home/scripts
     healthcheck:
       test: ["CMD", "mysqladmin", "-u root", "-p$DATABASE_PASSWORD", "ping", "-h", "localhost"]
       interval: 15s
@@ -34,4 +29,3 @@ services:
 volumes:
   db:
   scripts:
-  sql-files:
