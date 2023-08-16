@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.1
+    restart: unless-stopped
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=$DATABASE_PASSWORD
+      - MYSQL_DATABASE=$DATABASE_NAME
+    volumes:
+      - db:/var/lib/mysql
+      - scripts:/home/scripts
+    healthcheck:
+      test: ["CMD", "mysqladmin", "-u root", "-p$DATABASE_PASSWORD", "ping", "-h", "localhost"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+  bot:
+    depends_on:
+      - mysql
+    build: .
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+
+volumes:
+  db:
+  scripts:
