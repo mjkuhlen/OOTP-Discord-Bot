@@ -98,7 +98,7 @@ export default new client.command({
 
               let playerStats:any = []
 
-              if(dbPlayer.batting_stats[0].pa > 0) {
+              if(await dbPlayer.batting_stats[0].pa > 0) {
                 playerStats.push(
                     {name:'Year', value: `${dbPlayer.batting_stats[0].year}`, inline: true},
                     {name:'AB', value: `${dbPlayer.batting_stats[0].ab}`, inline: true},
@@ -114,7 +114,7 @@ export default new client.command({
                 )
               }
 
-              if(dbPlayer.pitching_stats[0].ip > 0){
+              if(await dbPlayer.pitching_stats[0].ip > 0){
                 playerStats.push(
                     {name:'Year', value: `${dbPlayer.pitching_stats[0].year}`, inline: true},
                     {name:'IP', value: `${dbPlayer.pitching_stats[0].ip}`, inline: true},
