@@ -48,7 +48,8 @@ export default new client.command({
                     where: {
                       year: {
                         not: null // Only consider rows with non-null year
-                      }
+                      },
+                      split_id: 1,
                     },
                     orderBy: {
                       year: 'desc' // Order by year in descending order
@@ -73,7 +74,8 @@ export default new client.command({
                     where: {
                       year: {
                         not: null // Only consider rows with non-null year
-                      }
+                      },
+                      split_id: 1,
                     },
                     orderBy: {
                       year: 'desc' // Order by year in descending order
