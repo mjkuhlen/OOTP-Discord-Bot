@@ -100,7 +100,7 @@ export default new client.command({
 
               if(dbPlayer.batting_stats[0].pa > 0) {
                 playerStats.push(
-                    {name:'Year', value: `${dbPlayer.batting_stats[0].year}`, inline: true},
+                    {name:'Batting Stats', value: `${dbPlayer.batting_stats[0].year}`, inline: true},
                     {name:'AB', value: `${dbPlayer.batting_stats[0].ab}`, inline: true},
                     {name:'H', value: `${dbPlayer.batting_stats[0].h}`, inline: true},
                     {name:'K', value: `${dbPlayer.batting_stats[0].k}`, inline: true},
@@ -116,7 +116,7 @@ export default new client.command({
 
               if(dbPlayer.pitching_stats[0].ip > 0){
                 playerStats.push(
-                    {name:'Year', value: `${dbPlayer.pitching_stats[0].year}`, inline: true},
+                    {name:'Pitching Stats', value: `${dbPlayer.pitching_stats[0].year}`, inline: true},
                     {name:'IP', value: `${dbPlayer.pitching_stats[0].ip}`, inline: true},
                     {name:'W', value: `${dbPlayer.pitching_stats[0].w}`, inline: true},
                     {name:'L', value: `${dbPlayer.pitching_stats[0].l}`, inline: true},
