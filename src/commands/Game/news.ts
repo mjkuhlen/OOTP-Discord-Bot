@@ -10,8 +10,8 @@ export default new client.command({
     .setName('news')
     .setDescription('Replies with the latest league news.'),
     run: async (client, interaction) => {
-        const prisma = new PrismaClient();
         try {
+            const prisma = new PrismaClient();
             const dateRepo = AppDataSource.getRepository(GameDate);
             const gameDate = await dateRepo.findOne({where: {id: 1}});
             const previousWeek = dayjs(gameDate?.date).subtract(8, 'days').toDate();
@@ -22,7 +22,7 @@ export default new client.command({
                 }},
                 take: 25
             });
-
+            await prisma.$disconnect();
             const headlines:any = []
             pNews.map((headline: any) => 
 
@@ -44,6 +44,5 @@ export default new client.command({
             console.error(err);
             await interaction.reply({content: 'Something went wrong. Simbot is sad.'})
         }
-        await prisma.$disconnect()
     }
 })

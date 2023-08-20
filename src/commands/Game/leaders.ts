@@ -76,6 +76,7 @@ export default new client.command({
                     place: 'asc'
                 }
             });
+            await prisma.$disconnect();
             const tableRows: any = [];
             pLeaders.forEach((leader:any) => {
                 const row = `${leader.place} - ${leader.player.first_name} ${leader.player.last_name} - ${leader?.player?.team?.nickname} - ${leader.amount}`;

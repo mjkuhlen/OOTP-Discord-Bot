@@ -95,7 +95,7 @@ export default new client.command({
                   }
                 }
               });
-
+              await prisma.$disconnect();
               let playerStats:any = []
 
               if(dbPlayer?.batting_stats[0]?.pa > 0) {

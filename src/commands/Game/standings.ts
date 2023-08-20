@@ -26,8 +26,8 @@ export default new client.command({
 					{ name: 'West', value: '2' },
                 )),
     run: async (client, interaction) => {
-		const prisma = new PrismaClient();
         try {
+			const prisma = new PrismaClient();
 			const leagueValue = interaction.options.getString('league');
 			const divisionValue = interaction.options.getString('division');
 			const league_id = 200;
