@@ -31,7 +31,9 @@ async function initialize() {
         });
         prisma.$disconnect();
         const date: any = leagues?.current_date;
-        const gamedate = dayjs(date).format('MMMM D YYYY');
+        const formatDate = date.toISOString().slice(0,19).replace("T", " ");
+
+        const gamedate = dayjs(formatDate).format('MMMM D YYYY');
 
         const userRepo = AppDataSource.getRepository(User);
 
