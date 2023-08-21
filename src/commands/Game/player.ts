@@ -90,7 +90,25 @@ export default new client.command({
                       s: true,
                       k: true,
                       bb: true,
-                      war: true
+                      war: true,
+                    },
+                  },
+                  gamesAsWinningPitcher: {
+                    select: {
+                      game_id: true,
+                      date: true,
+                      homeTeam: {
+                        select: {
+                          nickname: true,
+                        }
+                      },
+                      awayTeam: {
+                        select: {
+                          nickname: true
+                        }
+                      },
+                      runs0: true,
+                      runs1: true
                     }
                   }
                 }
@@ -115,6 +133,7 @@ export default new client.command({
               }
 
               if(dbPlayer?.pitching_stats[0]?.ip > 0){
+                console.log(dbPlayer.gamesAsWinningPitcher);
                 playerStats.push(
                     {name:'Year', value: `${dbPlayer.pitching_stats[0].year}`, inline: true},
                     {name:'IP', value: `${dbPlayer.pitching_stats[0].ip}`, inline: true},
