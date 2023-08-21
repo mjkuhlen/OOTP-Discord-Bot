@@ -82,6 +82,24 @@ export default new client.command({
                         select: {
                             first_name: true,
                             last_name: true,
+                            gamesAsWinningPitcher: {
+                                select: {
+                                  game_id: true,
+                                  date: true,
+                                  homeTeam: {
+                                    select: {
+                                      nickname: true,
+                                    }
+                                  },
+                                  awayTeam: {
+                                    select: {
+                                      nickname: true
+                                    }
+                                  },
+                                  runs0: true,
+                                  runs1: true
+                                }
+                              },
                             _count: {
                                 select: {
                                     gamesAsWinningPitcher: true,
@@ -117,6 +135,7 @@ export default new client.command({
             prisma.$disconnect();
             let headlines:any = [];
             games.map((headline: any) => {
+                console.log(headline.winningPitcher.gamesAsWinningPitcher)
                 const date: any = headline.date;
                 const formatDate = date.toISOString().slice(0,19).replace("T", " ");
                 headlines.push(
