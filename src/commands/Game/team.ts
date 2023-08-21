@@ -117,9 +117,11 @@ export default new client.command({
             prisma.$disconnect();
             let headlines:any = [];
             games.map((headline: any) => {
+                const date: any = headline.date;
+                const formatDate = date.toISOString().slice(0,19).replace("T", " ");
                 headlines.push(
                     {
-                        name: `${dayjs(headline.date).format('MMMM D, YYYY')}: ${headline.awayTeam.nickname} ${headline.runs0} @ ${headline.homeTeam.nickname} ${headline.runs1}`,
+                        name: `${dayjs(formatDate).format('MMMM D, YYYY')}: ${headline.awayTeam.nickname} ${headline.runs0} @ ${headline.homeTeam.nickname} ${headline.runs1}`,
                         value: `(W) ${headline.winningPitcher.first_name} ${headline.winningPitcher.last_name} (${headline.winningPitcher?._count.gamesAsWinningPitcher} - ${headline.winningPitcher?._count.gamesAsLosingPitcher})
                         (L) ${headline.losingPitcher.first_name} ${headline.losingPitcher.last_name} (${headline.losingPitcher?._count.gamesAsWinningPitcher} - ${headline.losingPitcher?._count.gamesAsLosingPitcher})`
                     }
