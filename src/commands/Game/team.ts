@@ -82,40 +82,56 @@ export default new client.command({
                         select: {
                             first_name: true,
                             last_name: true,
+                            gamesAsWinningPitcher: {
+                                where: {
+                                    game_type: 0,
+                                },
+                                select: {
+                                  game_id: true,
+                                }
+                              },
+                            gamesAsLosingPitcher: {
+                                where: {
+                                    game_type: 0,
+                                },
+                                select: {
+                                  game_id: true,
+                                }
+                            },
                             _count: {
                                 select: {
-                                    gamesAsWinningPitcher: {
-                                        where: {
-                                            game_id: 0
-                                        }
-                                    },
-                                    gamesAsLosingPitcher: {
-                                        where: {
-                                            game_id: 0
-                                        }
-                                    },
-                                },
-                            },
+                                    gamesAsWinningPitcher: true,
+                                    gamesAsLosingPitcher: true
+                                }
+                            }
                         },
                     },
                     losingPitcher: {
                         select: {
                             first_name: true,
                             last_name: true,
+                            gamesAsWinningPitcher: {
+                                where: {
+                                    game_type: 0,
+                                },
+                                select: {
+                                  game_id: true,
+                                }
+                              },
+                            gamesAsLosingPitcher: {
+                                where: {
+                                    game_type: 0,
+                                },
+                                select: {
+                                  game_id: true,
+                                }
+                            },
                             _count: {
                                 select: {
-                                    gamesAsWinningPitcher: {
-                                        where: {
-                                            game_id: 0
-                                        }
-                                    },
-                                    gamesAsLosingPitcher: {
-                                        where: {
-                                            game_id: 0
-                                        }
-                                    },
-                                },
-                            },
+                                    gamesAsWinningPitcher: true,
+                                    gamesAsLosingPitcher: true
+                                }
+                            }
                         },
                     },
                     savePitcher: {
@@ -133,6 +149,7 @@ export default new client.command({
             prisma.$disconnect();
             let headlines:any = [];
             games.map((headline: any) => {
+                console.log(headline.winningPitcher.gamesAsWinningPitcher)
                 const date: any = headline.date;
                 const formatDate = date.toISOString().slice(0,19).replace("T", " ");
                 headlines.push(
