@@ -85,6 +85,7 @@ export default new client.command({
                             gamesAsWinningPitcher: {
                                 select: {
                                   game_id: true,
+                                  game_type: true,
                                   date: true,
                                   homeTeam: {
                                     select: {
@@ -98,6 +99,9 @@ export default new client.command({
                                   },
                                   runs0: true,
                                   runs1: true
+                                },
+                                orderBy: {
+                                    date: 'asc'
                                 }
                               },
                             _count: {
