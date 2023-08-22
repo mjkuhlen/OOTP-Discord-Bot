@@ -12,14 +12,17 @@ export default new client.command({
     run: async (client, interaction) => {
         try {
             const prisma = new PrismaClient();
-            const dateRepo = AppDataSource.getRepository(GameDate);
-            const gameDate = await dateRepo.findOne({where: {id: 1}});
-            const previousWeek = dayjs(gameDate?.date).subtract(8, 'days').toDate();
 
             const pNews = await prisma.messages.findMany({
-                where: {league_id_0: 200, date: {
-                    gte: previousWeek
-                }},
+                where: {
+                    OR: [
+                        {league_id_0: 200},
+                        {league_id_1: 200}
+                    ],
+                },
+                orderBy: {
+                    date: 'desc'
+                },
                 take: 25
             });
             await prisma.$disconnect();

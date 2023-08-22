@@ -1,6 +1,14 @@
 import { EmbedBuilder, SlashCommandBuilder, codeBlock } from "discord.js";
 import { client } from "../..";
 import { PrismaClient } from "@prisma/client";
+import hrLeaders from "../../utilities/battingLeaders/hrLeaders";
+import rbiLeader from "../../utilities/battingLeaders/rbiLeader";
+import sbLeader from "../../utilities/battingLeaders/sbLeader";
+import warLeader from "../../utilities/battingLeaders/warLeader";
+import pwarLeader from "../../utilities/pitchingLeaders/pwarLeader";
+import wLeader from "../../utilities/pitchingLeaders/wLeader";
+import sLeader from "../../utilities/pitchingLeaders/sLeader";
+import kLeader from "../../utilities/pitchingLeaders/kLeader";
 
 export default new client.command({
     structure: new SlashCommandBuilder()
@@ -13,12 +21,10 @@ export default new client.command({
             .setRequired(true)
             .addChoices(
                 {name: 'HR', value: '8'},
-                {name: 'AVG', value: '18'},
                 {name: 'RBI', value: '10'},
                 {name: 'Stolen Bases', value: '9'},
                 {name: 'Batter WAR', value: '58'},
                 {name: 'Pitching Wins', value: '29'},
-                {name: 'ERA', value: '40'},
                 {name: 'Saves', value: '32'},
                 {name: 'Strikeouts', value: '38'},
                 {name: 'Pitching WAR', value: '59'}
@@ -34,104 +40,97 @@ export default new client.command({
             )),
     run: async (client, interaction) => {
         try {
-            const prisma = new PrismaClient();
+            await interaction.deferReply();
             const league_id = 200;
-            const leagueValue = interaction.options.getString('league');
+            const leagueValue = Number(interaction.options.getString('league'));
             const category = interaction.options.getString('category');
-            const pLeaders = await prisma.players_league_leader.findMany({
-                where: {
-                    league_id: league_id,
-                    category: Number(category),
-                    sub_league_id: Number(leagueValue),
-                    year: {
-                        equals: await prisma.players_league_leader.aggregate({
-                            where: {
-                                league_id: league_id,
-                                category: Number(category),
-                                sub_league_id: Number(leagueValue)
-                            },
-                            _max: {
-                                year: true
-                            }
-                        }).then(result => result._max.year)
-                    }
-                },
-                select: {
-                    year: true,
-                    place: true,
-                    amount: true,
-                    player: {
-                        select: {
-                            first_name: true,
-                            last_name: true,
-                            team: {
-                                select: {
-                                    nickname: true
-                                }
-                            }
-                        }
-                    }
-                },
-                orderBy: {
-                    place: 'asc'
-                }
-            });
-            await prisma.$disconnect();
             const tableRows: any = [];
-            pLeaders.forEach((leader:any) => {
-                const row = `${leader.place} - ${leader.player.first_name} ${leader.player.last_name} - ${leader?.player?.team?.nickname} - ${leader.amount}`;
-                tableRows.push(row);
-            });
-            const table = codeBlock(tableRows.join('\n'));
+            let pLeaders: any [];
             let embedTitle = '';
             let leagueTitle = '';
             switch(category) {
                 case '8':
                     embedTitle = 'Leaders HR';
-                    break;
-                case '18':
-                    embedTitle = 'Leaders AVG';
+                    pLeaders = await hrLeaders(league_id, leagueValue);
+                    pLeaders.forEach((leader:any) => {
+                        const row = `${leader.player.first_name} ${leader.player.last_name} - ${leader?.player?.team?.nickname} - ${leader.hr}`;
+                        tableRows.push(row);
+                    });
                     break;
                 case '10':
                     embedTitle = 'Leaders RBI';
+                    pLeaders = await rbiLeader(league_id, leagueValue);
+                    pLeaders.forEach((leader:any) => {
+                        const row = `${leader.player.first_name} ${leader.player.last_name} - ${leader?.player?.team?.nickname} - ${leader.hr}`;
+                        tableRows.push(row);
+                    });
                     break;
                 case '9':
                     embedTitle = 'Leaders Stolen Bases';
+                    pLeaders = await sbLeader(league_id, leagueValue);
+                    pLeaders.forEach((leader:any) => {
+                        const row = `${leader.player.first_name} ${leader.player.last_name} - ${leader?.player?.team?.nickname} - ${leader.hr}`;
+                        tableRows.push(row);
+                    });
                     break;
                 case '58':
                     embedTitle = 'Leaders Batting WAR';
+                    pLeaders = await warLeader(league_id, leagueValue);
+                    pLeaders.forEach((leader:any) => {
+                        const row = `${leader.player.first_name} ${leader.player.last_name} - ${leader?.player?.team?.nickname} - ${leader.hr}`;
+                        tableRows.push(row);
+                    });
                     break;
                 case '59':
                     embedTitle = 'Leaders Pitching WAR';
+                    pLeaders = await pwarLeader(league_id, leagueValue);
+                    pLeaders.forEach((leader:any) => {
+                        const row = `${leader.player.first_name} ${leader.player.last_name} - ${leader?.player?.team?.nickname} - ${leader.hr}`;
+                        tableRows.push(row);
+                    });
                     break;
                 case '29':
                     embedTitle = 'Leaders Wins';
-                    break;
-                case '40':
-                    embedTitle = 'Leaders ERA';
+                    pLeaders = await wLeader(league_id, leagueValue);
+                    pLeaders.forEach((leader:any) => {
+                        const row = `${leader.player.first_name} ${leader.player.last_name} - ${leader?.player?.team?.nickname} - ${leader.hr}`;
+                        tableRows.push(row);
+                    });
                     break;
                 case '32':
                     embedTitle = 'Leaders Saves';
+                    pLeaders = await sLeader(league_id, leagueValue);
+                    pLeaders.forEach((leader:any) => {
+                        const row = `${leader.player.first_name} ${leader.player.last_name} - ${leader?.player?.team?.nickname} - ${leader.hr}`;
+                        tableRows.push(row);
+                    });
                     break;
                 case '38':
                     embedTitle = 'Leaders Strikeouts';
+                    pLeaders = await kLeader(league_id, leagueValue);
+                    pLeaders.forEach((leader:any) => {
+                        const row = `${leader.player.first_name} ${leader.player.last_name} - ${leader?.player?.team?.nickname} - ${leader.hr}`;
+                        tableRows.push(row);
+                    });
                     break;
             }
             switch (leagueValue) {
-                case '0':
+                case 0:
                     leagueTitle = 'American League';
                     break;
-                case '1':
+                case 1:
                     leagueTitle = 'National League';
                     break;
                 default:
                     break;
                 }
+
+            const table = codeBlock(tableRows.join('\n'));
 			const embed = new EmbedBuilder()
 				.setTitle(`${leagueTitle} - ${embedTitle}`)
 				.setDescription(table)
 				.setColor('#0099ff');
-            await interaction.reply({embeds: [embed]})
+            await interaction.editReply({embeds: [embed]})
         } catch (err) {
             console.error('Error Occured:', err);
 			await interaction.editReply({content: 'Something went wrong. Simbot is sad.'})
