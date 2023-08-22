@@ -61,7 +61,7 @@ export default new client.command({
                     embedTitle = 'Leaders RBI';
                     pLeaders = await rbiLeader(league_id, leagueValue);
                     pLeaders.forEach((leader:any) => {
-                        const row = `${leader.player.first_name} ${leader.player.last_name} - ${leader?.player?.team?.nickname} - ${leader.hr}`;
+                        const row = `${leader.player.first_name} ${leader.player.last_name} - ${leader?.player?.team?.nickname} - ${leader.rbi}`;
                         tableRows.push(row);
                     });
                     break;
@@ -69,7 +69,7 @@ export default new client.command({
                     embedTitle = 'Leaders Stolen Bases';
                     pLeaders = await sbLeader(league_id, leagueValue);
                     pLeaders.forEach((leader:any) => {
-                        const row = `${leader.player.first_name} ${leader.player.last_name} - ${leader?.player?.team?.nickname} - ${leader.hr}`;
+                        const row = `${leader.player.first_name} ${leader.player.last_name} - ${leader?.player?.team?.nickname} - ${leader.sb}`;
                         tableRows.push(row);
                     });
                     break;
@@ -77,7 +77,7 @@ export default new client.command({
                     embedTitle = 'Leaders Batting WAR';
                     pLeaders = await warLeader(league_id, leagueValue);
                     pLeaders.forEach((leader:any) => {
-                        const row = `${leader.player.first_name} ${leader.player.last_name} - ${leader?.player?.team?.nickname} - ${leader.hr}`;
+                        const row = `${leader.player.first_name} ${leader.player.last_name} - ${leader?.player?.team?.nickname} - ${leader.war}`;
                         tableRows.push(row);
                     });
                     break;
@@ -85,7 +85,7 @@ export default new client.command({
                     embedTitle = 'Leaders Pitching WAR';
                     pLeaders = await pwarLeader(league_id, leagueValue);
                     pLeaders.forEach((leader:any) => {
-                        const row = `${leader.player.first_name} ${leader.player.last_name} - ${leader?.player?.team?.nickname} - ${leader.hr}`;
+                        const row = `${leader.player.first_name} ${leader.player.last_name} - ${leader?.player?.team?.nickname} - ${leader.war}`;
                         tableRows.push(row);
                     });
                     break;
@@ -93,7 +93,7 @@ export default new client.command({
                     embedTitle = 'Leaders Wins';
                     pLeaders = await wLeader(league_id, leagueValue);
                     pLeaders.forEach((leader:any) => {
-                        const row = `${leader.player.first_name} ${leader.player.last_name} - ${leader?.player?.team?.nickname} - ${leader.hr}`;
+                        const row = `${leader.player.first_name} ${leader.player.last_name} - ${leader?.player?.team?.nickname} - ${leader.w}`;
                         tableRows.push(row);
                     });
                     break;
@@ -101,7 +101,7 @@ export default new client.command({
                     embedTitle = 'Leaders Saves';
                     pLeaders = await sLeader(league_id, leagueValue);
                     pLeaders.forEach((leader:any) => {
-                        const row = `${leader.player.first_name} ${leader.player.last_name} - ${leader?.player?.team?.nickname} - ${leader.hr}`;
+                        const row = `${leader.player.first_name} ${leader.player.last_name} - ${leader?.player?.team?.nickname} - ${leader.s}`;
                         tableRows.push(row);
                     });
                     break;
@@ -109,7 +109,7 @@ export default new client.command({
                     embedTitle = 'Leaders Strikeouts';
                     pLeaders = await kLeader(league_id, leagueValue);
                     pLeaders.forEach((leader:any) => {
-                        const row = `${leader.player.first_name} ${leader.player.last_name} - ${leader?.player?.team?.nickname} - ${leader.hr}`;
+                        const row = `${leader.player.first_name} ${leader.player.last_name} - ${leader?.player?.team?.nickname} - ${leader.k}`;
                         tableRows.push(row);
                     });
                     break;
