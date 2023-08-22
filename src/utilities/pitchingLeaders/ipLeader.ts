@@ -6,6 +6,7 @@ export default async function hrLeaders(league_id: number, sub_league_id: number
     const tLeaders = await prisma.players_career_pitching_stats.findMany({
         where: {
             league_id: league_id,
+            split_id: 1,
             year: {
                 equals: await prisma.players_career_pitching_stats.aggregate({
                     where: {
