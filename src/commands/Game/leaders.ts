@@ -9,6 +9,7 @@ import pwarLeader from "../../utilities/pitchingLeaders/pwarLeader";
 import wLeader from "../../utilities/pitchingLeaders/wLeader";
 import sLeader from "../../utilities/pitchingLeaders/sLeader";
 import kLeader from "../../utilities/pitchingLeaders/kLeader";
+import hLeader from "../../utilities/battingLeaders/hLeader";
 
 export default new client.command({
     structure: new SlashCommandBuilder()
@@ -21,6 +22,7 @@ export default new client.command({
             .setRequired(true)
             .addChoices(
                 {name: 'HR', value: '8'},
+                {name: 'Hits', value: '3'},
                 {name: 'RBI', value: '10'},
                 {name: 'Stolen Bases', value: '9'},
                 {name: 'Batter WAR', value: '58'},
@@ -54,6 +56,14 @@ export default new client.command({
                     pLeaders = await hrLeaders(league_id, leagueValue);
                     pLeaders.forEach((leader:any) => {
                         const row = `${leader.player.first_name} ${leader.player.last_name} - ${leader?.player?.team?.nickname} - ${leader.hr}`;
+                        tableRows.push(row);
+                    });
+                    break;
+                case '3':
+                    embedTitle = 'Leaders Hits';
+                    pLeaders = await hLeader(league_id, leagueValue);
+                    pLeaders.forEach((leader:any) => {
+                        const row = `${leader.player.first_name} ${leader.player.last_name} - ${leader?.player?.team?.nickname} - ${leader.h}`;
                         tableRows.push(row);
                     });
                     break;
