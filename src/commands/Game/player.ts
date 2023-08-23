@@ -50,6 +50,7 @@ export default new client.command({
                         not: null // Only consider rows with non-null year
                       },
                       split_id: 1,
+                      league_id: league_id
                     },
                     orderBy: {
                       year: 'desc' // Order by year in descending order
@@ -76,6 +77,7 @@ export default new client.command({
                         not: null // Only consider rows with non-null year
                       },
                       split_id: 1,
+                      league_id: league_id
                     },
                     orderBy: {
                       year: 'desc' // Order by year in descending order
