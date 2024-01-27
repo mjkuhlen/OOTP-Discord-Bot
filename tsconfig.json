@@ -108,7 +108,7 @@
   }, 
   "include": [
     "src"
-, "old/leaders.ts"  ],
+  ],
   "exclude": [
     "dist",
     "node_modules"
