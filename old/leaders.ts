@@ -1,15 +1,15 @@
 import { EmbedBuilder, SlashCommandBuilder, codeBlock } from "discord.js";
-import { client } from "../..";
+import { client } from "../src";
 import { PrismaClient } from "@prisma/client";
-import hrLeaders from "../../utilities/battingLeaders/hrLeaders";
-import rbiLeader from "../../utilities/battingLeaders/rbiLeader";
-import sbLeader from "../../utilities/battingLeaders/sbLeader";
-import warLeader from "../../utilities/battingLeaders/warLeader";
-import pwarLeader from "../../utilities/pitchingLeaders/pwarLeader";
-import wLeader from "../../utilities/pitchingLeaders/wLeader";
-import sLeader from "../../utilities/pitchingLeaders/sLeader";
-import kLeader from "../../utilities/pitchingLeaders/kLeader";
-import hLeader from "../../utilities/battingLeaders/hLeader";
+import hrLeaders from "../src/utilities/battingLeaders/hrLeaders";
+import rbiLeader from "../src/utilities/battingLeaders/rbiLeader";
+import sbLeader from "../src/utilities/battingLeaders/sbLeader";
+import warLeader from "../src/utilities/battingLeaders/warLeader";
+import pwarLeader from "../src/utilities/pitchingLeaders/pwarLeader";
+import wLeader from "../src/utilities/pitchingLeaders/wLeader";
+import sLeader from "../src/utilities/pitchingLeaders/sLeader";
+import kLeader from "../src/utilities/pitchingLeaders/kLeader";
+import hLeader from "../src/utilities/battingLeaders/hLeader";
 
 export default new client.command({
     structure: new SlashCommandBuilder()
