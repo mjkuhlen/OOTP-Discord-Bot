@@ -7,7 +7,16 @@ export default async function hrLeaders(league_id: number, sub_league_id: number
         where: {
             league_id: league_id,
             split_id: 1,
-            year: 2028,
+            year: {
+                equals: await prisma.players_career_batting_stats.aggregate({
+                    where: {
+                        league_id: league_id,
+                    },
+                    _max: {
+                        year: true
+                    }
+                }).then(result => result._max.year)
+            },
             player: {
                 team: {
                     sub_league_id: sub_league_id
