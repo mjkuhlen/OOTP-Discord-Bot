@@ -15,8 +15,8 @@ client.on('interactionCreate', async (interaction) => {
     };
 });
 
-client.on('messageCreate', (message) => {
-    if (message.mentions.members?.has(client.user!.username)) {
-        message.channel.send('Hi there!')
+client.on('messageCreate', (messageCreate) => {
+    if (messageCreate.mentions.members?.has(client.user!.username)) {
+        messageCreate.channel.send('Hi there!')
     }
 })
