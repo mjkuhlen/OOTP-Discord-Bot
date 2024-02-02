@@ -13,9 +13,3 @@ client.on('interactionCreate', async (interaction) => {
         console.error(err);
     };
 });
-
-client.on('messageCreate', async (messageCreate) => {
-    if (messageCreate.mentions.members?.has(client.user!.username)) {
-        await messageCreate.reply('Hi there!')
-    }
-})
