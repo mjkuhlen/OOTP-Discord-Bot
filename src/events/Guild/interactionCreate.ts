@@ -1,4 +1,5 @@
 import { client } from "../..";
+import "dotenv"
 
 client.on('interactionCreate', async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
@@ -13,3 +14,9 @@ client.on('interactionCreate', async (interaction) => {
         console.error(err);
     };
 });
+
+client.on('messageCreate', (message) => {
+    if (message.mentions.members?.has(client.user!.id)) {
+        message.channel.send('Hi there!')
+    }
+})
