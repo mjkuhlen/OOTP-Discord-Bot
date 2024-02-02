@@ -16,6 +16,6 @@ client.on('interactionCreate', async (interaction) => {
 
 client.on('messageCreate', async (messageCreate) => {
     if (messageCreate.mentions.members?.has(client.user!.username)) {
-        messageCreate.channel.send('Hi there!')
+        await messageCreate.reply('Hi there!')
     }
 })
