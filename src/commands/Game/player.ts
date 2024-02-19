@@ -19,13 +19,12 @@ export default new client.command({
             .setDescription('The players last name')
             .setRequired(true)),
     run: async (client, interaction) => {
+      const league_id = 200;
+      const team_nickname = interaction.options.getString('team');
+      const player_firstName = interaction.options.getString('fname');
+      const player_lastName = interaction.options.getString('lname');
         try {
             await interaction.deferReply();
-            const league_id = 200;
-            const team_nickname = interaction.options.getString('team');
-            const player_firstName = interaction.options.getString('fname');
-            const player_lastName = interaction.options.getString('lname');
-
             const dbPlayer:any = await prisma.players.findFirstOrThrow({
                 where: {
                   league_id: league_id,
@@ -153,7 +152,7 @@ export default new client.command({
             await interaction.editReply({embeds: [embed]})              
         } catch (err) {
             console.error(err)
-            await interaction.editReply({content: 'Something went wrong, Simbot is sad.'})
+            await interaction.editReply({content: `Something went wrong, Simbot is sad. You searched for ${player_firstName} ${player_lastName} on ${team_nickname}.  Is that correct?`})
         }
     }
 })
