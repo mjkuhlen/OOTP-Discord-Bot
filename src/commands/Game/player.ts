@@ -152,7 +152,7 @@ export default new client.command({
             await interaction.editReply({embeds: [embed]})              
         } catch (err) {
             console.error(err)
-            await interaction.editReply({content: `Something went wrong, Simbot is sad. You searched for ${player_firstName} ${player_lastName} on ${team_nickname}.  Is that correct?`})
+            await interaction.editReply({content: `Something went wrong, Simbot is sad. You searched for ${player_firstName} ${player_lastName} on the ${team_nickname}.  Is that correct?`})
         }
     }
 })
