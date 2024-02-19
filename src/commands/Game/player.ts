@@ -133,7 +133,6 @@ export default new client.command({
               }
 
               if(dbPlayer?.pitching_stats[0]?.ip > 0){
-                console.log(dbPlayer.gamesAsWinningPitcher);
                 playerStats.push(
                     {name:'Year', value: `${dbPlayer.pitching_stats[0].year}`, inline: true},
                     {name:'IP', value: `${dbPlayer.pitching_stats[0].ip}`, inline: true},
