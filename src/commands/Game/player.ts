@@ -26,7 +26,7 @@ export default new client.command({
             const player_firstName = interaction.options.getString('fname');
             const player_lastName = interaction.options.getString('lname');
 
-            const dbPlayer:any = await prisma.players.findFirst({
+            const dbPlayer:any = await prisma.players.findFirstOrThrow({
                 where: {
                   league_id: league_id,
                   team: {
