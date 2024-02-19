@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { client } from '../..';
-import { PrismaClient } from '@prisma/client';
+import prisma from '../../utilities/client';
 
 export default new client.command({
     structure: new SlashCommandBuilder()
@@ -27,7 +27,6 @@ export default new client.command({
                 )),
     run: async (client, interaction) => {
         try {
-			const prisma = new PrismaClient();
 			const leagueValue = interaction.options.getString('league');
 			const divisionValue = interaction.options.getString('division');
 			const league_id = 200;
@@ -57,8 +56,6 @@ export default new client.command({
 					}
 				}
 			});
-
-			await prisma.$disconnect();
 
 			//create the rows for the table
 			const newTableRows: any = [];

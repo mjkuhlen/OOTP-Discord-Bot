@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
-
+import prisma from "../client";
 
 export default async function hrLeaders(league_id: number, sub_league_id: number) {
-    const prisma = new PrismaClient();
     const tLeaders = await prisma.players_career_pitching_stats.findMany({
         where: {
             league_id: league_id,
@@ -42,7 +40,6 @@ export default async function hrLeaders(league_id: number, sub_league_id: number
         },
         take: 10
     });
-    await prisma.$disconnect();
 
     return tLeaders;
 }

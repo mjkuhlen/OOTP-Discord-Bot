@@ -1,7 +1,7 @@
 import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
 import { client } from "../..";
 import dayjs from "dayjs";
-import { PrismaClient } from '@prisma/client';
+import prisma from "../../utilities/client";
 
 export default new client.command({
     structure: new SlashCommandBuilder()
@@ -9,14 +9,12 @@ export default new client.command({
         .setDescription('Replies with the current game date.'),
     run: async (client, interaction) => {
         try {
-            const prisma = new PrismaClient();
             const league_id = 200
             const leagues = await prisma.leagues.findFirst({
                 where: {
                     league_id: league_id
                 }
             });
-            await prisma.$disconnect();
             const date: any = leagues?.current_date;
             const formatDate = date.toISOString().slice(0,19).replace("T", " ");
             

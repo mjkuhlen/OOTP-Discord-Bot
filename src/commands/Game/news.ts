@@ -1,9 +1,7 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { client } from "../..";
-import { AppDataSource } from "../../datasource";
-import { GameDate } from "../../entity/gamedate";
 import dayjs from "dayjs";
-import { PrismaClient } from '@prisma/client';
+import prisma from "../../utilities/client";
 
 export default new client.command({
     structure: new SlashCommandBuilder()
@@ -11,8 +9,6 @@ export default new client.command({
     .setDescription('Replies with the latest league news.'),
     run: async (client, interaction) => {
         try {
-            const prisma = new PrismaClient();
-
             const pNews = await prisma.messages.findMany({
                 where: {
                     OR: [
@@ -25,7 +21,6 @@ export default new client.command({
                 },
                 take: 25
             });
-            await prisma.$disconnect();
             const headlines:any = []
             pNews.map((headline: any) => 
 
@@ -41,7 +36,6 @@ export default new client.command({
                 .setFields(headlines)
                 .setColor('#0099ff');
 
-            await prisma.$disconnect()
             await interaction.reply({embeds: [embed]})
         } catch (err) {
             console.error(err);

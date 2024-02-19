@@ -1,7 +1,7 @@
 import { EmbedBuilder, SlashCommandBuilder, codeBlock } from "discord.js";
 import { client } from "../..";
 import dayjs from "dayjs";
-import { PrismaClient } from "@prisma/client";
+import prisma from "../../utilities/client";
 
 export default new client.command({
     structure: new SlashCommandBuilder()
@@ -15,7 +15,6 @@ export default new client.command({
         try {
             await interaction.deferReply();
             const league_id = 200
-            const prisma = new PrismaClient();
             const leagueDate = await prisma.leagues.findFirst({
                 where: {
                     league_id: league_id
@@ -114,7 +113,6 @@ export default new client.command({
                     hits1: true
                 }
             });
-            prisma.$disconnect();
             let headlines:any = [];
             games.map((headline: any) => {
                 const date: any = headline.date;

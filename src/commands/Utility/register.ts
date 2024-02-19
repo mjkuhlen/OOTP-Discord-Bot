@@ -14,13 +14,18 @@ export default new client.command({
                 .setRequired(true)
         ),
     run: async (client, interaction) => {
-        const user = interaction.options.getUser('target');
-        const userRepo = await AppDataSource.getRepository(User);
-        const newUser = await userRepo.create({
-            username: user?.username
-        })
-        await userRepo.save(newUser)
-
-        await interaction.reply({content: `Added ${user?.username} to the DB.`, ephemeral: true});
+        try {
+            const user = interaction.options.getUser('target');
+            const userRepo = await AppDataSource.getRepository(User);
+            const newUser = await userRepo.create({
+                username: user?.username
+            })
+            await userRepo.save(newUser)
+    
+            await interaction.reply({content: `Added ${user?.username} to the DB.`, ephemeral: true});
+        } catch (err) {
+            console.error(err);
+            await interaction.editReply({content: 'Something went wrong. Simbot is sad.'})
+        }
     },
 });

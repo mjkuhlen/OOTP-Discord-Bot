@@ -1,13 +1,11 @@
 import { config } from "dotenv";
 import ExtendedClient from "./class/ExtendedClient";
 import { AppDataSource } from "./datasource";
-import path from "path";
-import readCSV from "./utilities/readCSV";
 import { User } from "./entity/user";
 import dayjs from "dayjs";
 import { TextChannel } from "discord.js";
 import { GameDate } from "./entity/gamedate";
-import { PrismaClient } from '@prisma/client';
+import prisma from "./utilities/client";
 
 config();
 
@@ -23,14 +21,12 @@ async function initialize() {
 
     setInterval(async () => {
         try {
-            const prisma = new PrismaClient();
             const league_id = 200
             const leagues = await prisma.leagues.findFirst({
                 where: {
                     league_id: league_id
                 }
             });
-            prisma.$disconnect();
             const date: any = leagues?.current_date;
             const formatDate = date.toISOString().slice(0,19).replace("T", " ");
     

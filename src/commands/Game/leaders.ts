@@ -1,6 +1,5 @@
 import { EmbedBuilder, SlashCommandBuilder, codeBlock } from "discord.js";
 import { client } from "../..";
-import { PrismaClient } from "@prisma/client";
 import hrLeaders from "../../utilities/battingLeaders/hrLeaders";
 import rbiLeader from "../../utilities/battingLeaders/rbiLeader";
 import sbLeader from "../../utilities/battingLeaders/sbLeader";

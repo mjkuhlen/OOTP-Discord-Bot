@@ -1,6 +1,6 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { client } from "../..";
-import { PrismaClient, Prisma } from "@prisma/client";
+import prisma from "../../utilities/client";
 
 export default new client.command({
     structure: new SlashCommandBuilder()
@@ -25,7 +25,6 @@ export default new client.command({
             const team_nickname = interaction.options.getString('team');
             const player_firstName = interaction.options.getString('fname');
             const player_lastName = interaction.options.getString('lname');
-            const prisma = new PrismaClient();
 
             const dbPlayer:any = await prisma.players.findFirst({
                 where: {
@@ -115,7 +114,6 @@ export default new client.command({
                   }
                 }
               });
-              await prisma.$disconnect();
               let playerStats:any = []
 
               if(dbPlayer?.batting_stats[0]?.pa > 0) {
