@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "discord.js";
 import { client } from "../..";
-import { execSync } from 'child_process';
+import { exec } from 'child_process';
 import * as fs from 'fs';
 import { config } from "dotenv";
 
@@ -17,27 +17,29 @@ export default new client.command({
         try {
             await interaction.deferReply({ephemeral: true});
             // Get list of SQL files in the directory
-            fs.readdir(sqlDir, (err, files) => {
-                if (err) {
-                console.error('Error reading directory:', err);
-                return;
-                }
-            
-                // Iterate over each SQL file
-                files.forEach(file => {
+            const files = fs.readdirSync(sqlDir);
+            // Iterate over each SQL file
+            for (const file of files) {
                 if (file.endsWith('.sql')) {
                     const filePath = `${sqlDir}/${file}`;
                     console.log(`Importing file: ${filePath}`);
-            
-                    // Execute mysql command to import SQL file
+                    // Execute mysql command to import SQL file asynchronously
                     try {
-                    execSync(`mysql -u ${username} -p${password} ${database} < ${filePath}`, { stdio: 'inherit' });
+                        await new Promise<void>((resolve, reject) => {
+                            exec(`mysql -u ${username} -p${password} ${database} < ${filePath}`, (error, stdout, stderr) => {
+                                if (error) {
+                                    console.error(`Error importing file: ${filePath}`, error);
+                                    reject(error);
+                                } else {
+                                    resolve();
+                                }
+                            });
+                        });
                     } catch (error) {
-                    console.error(`Error importing file: ${filePath}`, error);
+                        console.error(`Error importing file: ${filePath}`, error);
                     }
                 }
-                });
-            });
+            }
             await interaction.editReply({content: `SQL Files have been updated`})
         } catch (err) {
             console.log(err)
