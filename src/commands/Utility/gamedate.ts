@@ -9,6 +9,7 @@ export default new client.command({
         .setDescription('Replies with the current game date.'),
     run: async (client, interaction) => {
         try {
+            await interaction.deferReply();
             const league_id = 200
             const leagues = await prisma.leagues.findFirst({
                 where: {
@@ -23,10 +24,10 @@ export default new client.command({
                 .setDescription(`The current game date is: ${dayjs(formatDate).format('MMMM D, YYYY')}`)
                 .setColor('#0099ff');
     
-            await interaction.reply({ embeds: [embed] })
+            await interaction.editReply({ embeds: [embed] })
         } catch (err) {
             console.error(err);
-            await interaction.reply({content: 'Something went wrong. Simbot is sad.'})
+            await interaction.editReply({content: 'Something went wrong. Simbot is sad.'})
         }
     }
 });

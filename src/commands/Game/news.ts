@@ -9,6 +9,7 @@ export default new client.command({
     .setDescription('Replies with the latest league news.'),
     run: async (client, interaction) => {
         try {
+            await interaction.deferReply();
             const pNews = await prisma.messages.findMany({
                 where: {
                     OR: [
@@ -36,10 +37,10 @@ export default new client.command({
                 .setFields(headlines)
                 .setColor('#0099ff');
 
-            await interaction.reply({embeds: [embed]})
+            await interaction.editReply({embeds: [embed]})
         } catch (err) {
             console.error(err);
-            await interaction.reply({content: 'Something went wrong. Simbot is sad.'})
+            await interaction.editReply({content: 'Something went wrong. Simbot is sad.'})
         }
     }
 })

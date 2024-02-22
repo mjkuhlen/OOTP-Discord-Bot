@@ -7,12 +7,13 @@ export default new client.command({
         .setDescription('Replies with a list of all the available commands'),
     run: async (client, interaction) => {
       try {
+        await interaction.deferReply();
         const embed = new EmbedBuilder()
         .setTitle('Available Commands')
         .setDescription('ready - Lets the bot know you are ready for the next sim\ngamedate - To see the current game date\nteam - Shows information about the selected team.\nuploaded - Shows who is ready for the next sim\nstandings - Shows the selected division standings')
         .setColor('#0099ff');
   
-      await interaction.reply({ embeds: [embed] });
+      await interaction.editReply({ embeds: [embed] });
       } catch (err) {
         console.error(err);
         await interaction.editReply({content: 'Something went wrong. Simbot is sad.'})

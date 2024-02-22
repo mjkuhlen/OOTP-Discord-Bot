@@ -15,6 +15,7 @@ export default new client.command({
         ),
     run: async (client, interaction) => {
         try {
+            await interaction.deferReply({ephemeral: true});
             const user = interaction.options.getUser('target');
             const userRepo = await AppDataSource.getRepository(User);
             const newUser = await userRepo.create({
@@ -22,7 +23,7 @@ export default new client.command({
             })
             await userRepo.save(newUser)
     
-            await interaction.reply({content: `Added ${user?.username} to the DB.`, ephemeral: true});
+            await interaction.editReply({content: `Added ${user?.username} to the DB.`});
         } catch (err) {
             console.error(err);
             await interaction.editReply({content: 'Something went wrong. Simbot is sad.'})

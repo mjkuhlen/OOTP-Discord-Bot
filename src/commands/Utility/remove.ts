@@ -13,13 +13,14 @@ export default new client.command({
             .setRequired(true)),
     run: async (client, interaction) => {
         try {
+            await interaction.deferReply({ephemeral: true});
             const user = interaction.options.getString('user') as string;
             const userRepo = await AppDataSource.getRepository(User);
             const dbuser = await userRepo.findOneOrFail({
                 where: { username: user}
             });
             await userRepo.remove(dbuser);
-            await interaction.reply({content: `Removed ${user} from the DB`, ephemeral: true})
+            await interaction.editReply({content: `Removed ${user} from the DB`})
         } catch (err) {
             console.log(err)
             await interaction.editReply({content: 'Something went wrong, Simbot is sad.'})

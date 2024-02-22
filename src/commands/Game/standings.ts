@@ -27,6 +27,7 @@ export default new client.command({
                 )),
     run: async (client, interaction) => {
         try {
+			await interaction.deferReply();
 			const leagueValue = interaction.options.getString('league');
 			const divisionValue = interaction.options.getString('division');
 			const league_id = 200;
@@ -110,7 +111,7 @@ export default new client.command({
 				.setDescription(replyContent)
 				.setColor('#0099ff');
 
-			await interaction.reply({ embeds: [embed] });
+			await interaction.editReply({ embeds: [embed] });
         } catch (err) {
             console.error('Error Occured:', err);
 			await interaction.editReply({content: 'Something went wrong. Simbot is sad.'})

@@ -9,6 +9,7 @@ export default new client.command({
         .setDescription('Replies with registered players and their upload status.'),
     run: async (client, interaction) => {
         try {
+            await interaction.deferReply();
             const userRepo = AppDataSource.getRepository(User);
             const users = await userRepo.find();
     
@@ -21,7 +22,7 @@ export default new client.command({
                 .setDescription(playersList)
                 .setColor('#0099ff')
             
-            await interaction.reply({embeds: [embed]})
+            await interaction.editReply({embeds: [embed]})
         } catch (err) {
             console.error(err);
             await interaction.editReply({content: 'Something went wrong. Simbot is sad.'})

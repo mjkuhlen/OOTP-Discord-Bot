@@ -15,6 +15,7 @@ export default new client.command({
         ),
     run: async (client, interaction) => {
         try {
+            await interaction.deferReply();
             const userTarget = interaction.user.username;
             const userRepo = AppDataSource.getRepository(User);
             const user = await userRepo.findOneByOrFail({username: userTarget});
@@ -34,7 +35,7 @@ export default new client.command({
                 .setDescription(msg)
                 .setColor('#0099ff')
             
-            await interaction.reply({embeds: [embed]})
+            await interaction.editReply({embeds: [embed]})
         } catch (err) {
             console.error(err);
             await interaction.editReply({content: 'Something went wrong. Simbot is sad.'})
