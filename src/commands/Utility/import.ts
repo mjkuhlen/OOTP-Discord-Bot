@@ -17,31 +17,20 @@ export default new client.command({
             await interaction.deferReply();
             // Get list of SQL files in the directory
             const files = fs.readdirSync(sqlDir);
-            // Array to store promises for each import task
-            const importPromises = [];
-            // Iterate over each SQL file
-            for (const file of files) {
-                if (file.endsWith('.sql')) {
-                    const filePath = `${sqlDir}/${file}`;
-                    console.log(`Queuing import for file: ${filePath}`);
-                    // Execute mysql command to import SQL file asynchronously
-                    const importPromise = new Promise<void>((resolve, reject) => {
-                        exec(`mysql -u ${username} -p${password} ${database} < ${filePath}`, (error, stdout, stderr) => {
-                            if (error) {
-                                console.error(`Error importing file: ${filePath}`, error);
-                                reject(error);
-                            } else {
-                                console.log(`Successfully imported file: ${filePath}`);
-                                resolve();
-                            }
-                        });
-                    });
-                    importPromises.push(importPromise);
+            // Prepare a list of SQL files to import
+            const sqlFiles = files.filter(file => file.endsWith('.sql'));
+            // Generate a single string containing paths to all SQL files
+            const fileList = sqlFiles.map(file => `${sqlDir}/${file}`).join(' ');
+            // Execute mysqlimport command to import SQL files in bulk
+            exec(`mysqlimport -u ${username} -p${password} ${database} ${fileList}`, async (error, stdout, stderr) => {
+                if (error) {
+                    console.error('Error importing files:', error);
+                    await interaction.editReply({content: 'Error importing files. Please check the logs for details.'});
+                } else {
+                    console.log('Successfully imported files:', fileList);
+                    await interaction.editReply({content: 'The SQL DB has been updated.'});
                 }
-            }
-            // Wait for all import tasks to complete
-            await Promise.all(importPromises);
-            await interaction.editReply({content: `The SQL DB has been updated.`});
+            });
         } catch (err) {
             console.error(err);
             await interaction.editReply({content: 'Something went wrong, Simbot is sad.'});
