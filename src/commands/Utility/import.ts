@@ -15,7 +15,7 @@ export default new client.command({
         const database = process.env.DATABASE_NAME;
         const password = process.env.DATABASE_PASSWORD;
         try {
-            await interaction.deferReply({ephemeral: true});
+            await interaction.deferReply();
             // Get list of SQL files in the directory
             const files = fs.readdirSync(sqlDir);
             // Iterate over each SQL file
@@ -40,7 +40,7 @@ export default new client.command({
                     }
                 }
             }
-            await interaction.editReply({content: `SQL Files have been updated`})
+            await interaction.editReply({content: `The SQL DB has been updated.`})
         } catch (err) {
             console.log(err)
             await interaction.editReply({content: 'Something went wrong, Simbot is sad.'})
