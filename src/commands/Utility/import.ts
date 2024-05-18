@@ -25,6 +25,7 @@ export default new client.command({
                 if (file.endsWith('.sql')) {
                     const filePath = `${sqlDir}/${file}`;
                     console.log(`Queuing import for file: ${filePath}`);
+
                     // Execute mysql command to import SQL file asynchronously
                     const importPromise = new Promise<void>((resolve, reject) => {
                         exec(`mysql -u ${username} -p${password} ${database} < ${filePath}`, (error, stdout, stderr) => {
@@ -33,10 +34,19 @@ export default new client.command({
                                 reject(error);
                             } else {
                                 console.log(`Successfully imported file: ${filePath}`);
-                                resolve();
+                                try {
+                                    // Delete the file after successful import
+                                    fs.unlinkSync(filePath);
+                                    console.log(`Deleted file: ${filePath}`);
+                                    resolve();
+                                } catch (deleteError) {
+                                    console.error(`Error deleting file: ${filePath}`, deleteError);
+                                    reject(deleteError);
+                                }
                             }
                         });
                     });
+
                     importPromises.push(importPromise);
                 }
             }
