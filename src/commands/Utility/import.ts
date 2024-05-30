@@ -34,15 +34,6 @@ export default new client.command({
                                 reject(error);
                             } else {
                                 console.log(`Successfully imported file: ${filePath}`);
-                                try {
-                                    // Delete the file after successful import
-                                    fs.unlinkSync(filePath);
-                                    console.log(`Deleted file: ${filePath}`);
-                                    resolve();
-                                } catch (deleteError) {
-                                    console.error(`Error deleting file: ${filePath}`, deleteError);
-                                    reject(deleteError);
-                                }
                             }
                         });
                     });
