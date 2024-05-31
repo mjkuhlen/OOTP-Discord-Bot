@@ -31,9 +31,6 @@ export default async function updateGameDateAndNotify() {
         }
         const checkDate = dayjs(dbDate.date).format('MMMM D YYYY');
 
-        console.log(`dbDate - ${dbDate.date}`);
-        console.log(`gameDate - ${gamedate}`);
-
         if (checkDate !== gamedate) {
             dbDate.date = dayjs(gamedate).toDate();
             await dateRepo.save(dbDate);
@@ -43,7 +40,7 @@ export default async function updateGameDateAndNotify() {
                 user.ready = false;
                 userRepo.save(user);
             });
-            console.log('New data found, users & date updated.');
+            console.log(`New data found, user status reset & date changed to ${dayjs(gamedate).format('dddd, MMMM D, YYYY')}.`);
             return dayjs(gamedate).format('dddd, MMMM D, YYYY')
         } else {
             console.log("Gamedate hasn't updated, no changes to users or date.");
