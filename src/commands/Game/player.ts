@@ -120,6 +120,7 @@ export default new client.command({
                     {name:'Year', value: `${dbPlayer.batting_stats[0].year}`, inline: true},
                     {name:'AB', value: `${dbPlayer.batting_stats[0].ab}`, inline: true},
                     {name:'H', value: `${dbPlayer.batting_stats[0].h}`, inline: true},
+                    {name:'AVG', value: `${dbPlayer.batting_stats[0].h/dbPlayer.batting_stats[0].ab}`, inline: true},
                     {name:'K', value: `${dbPlayer.batting_stats[0].k}`, inline: true},
                     {name:'PA', value: `${dbPlayer.batting_stats[0].pa}`, inline: true},
                     {name:'G', value: `${dbPlayer.batting_stats[0].g}`, inline: true},
