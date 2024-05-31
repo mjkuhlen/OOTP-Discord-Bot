@@ -60,12 +60,14 @@ export default new client.command({
                       ab: true,
                       h: true,
                       k: true,
+                      sf: true,
                       pa: true,
                       g: true,
                       gs: true,
                       hr: true,
                       rbi: true,
                       bb: true,
+                      hp: true,
                       war: true
                     }
                   },
@@ -121,6 +123,7 @@ export default new client.command({
                     {name:'AB', value: `${dbPlayer.batting_stats[0].ab}`, inline: true},
                     {name:'H', value: `${dbPlayer.batting_stats[0].h}`, inline: true},
                     {name:'AVG', value: `${(dbPlayer.batting_stats[0].h/dbPlayer.batting_stats[0].ab).toFixed(3)}`, inline: true},
+                    {name:'OBP', value: `${((dbPlayer.batting_stats[0].h + dbPlayer.batting_stats[0].bb + dbPlayer.batting_stats[0].hp)/(dbPlayer.batting_stats[0].ab + dbPlayer.batting_stats[0].hp + dbPlayer.batting_stats[0].sf)).toFixed(3)}`},
                     {name:'K', value: `${dbPlayer.batting_stats[0].k}`, inline: true},
                     {name:'PA', value: `${dbPlayer.batting_stats[0].pa}`, inline: true},
                     {name:'G', value: `${dbPlayer.batting_stats[0].g}`, inline: true},
@@ -128,6 +131,8 @@ export default new client.command({
                     {name:'HR', value: `${dbPlayer.batting_stats[0].hr}`, inline: true},
                     {name:'RBI', value: `${dbPlayer.batting_stats[0].rbi}`, inline: true},
                     {name:'BB', value: `${dbPlayer.batting_stats[0].bb}`, inline: true},
+                    {name:'HP', value: `${dbPlayer.batting_stats[0].hp}`, inline: true},
+                    {name:'SF', value: `${dbPlayer.batting_stats[0].sf}`, inline: true},
                     {name:'WAR', value: `${dbPlayer.batting_stats[0].war}`, inline: true}
                 )
               }
