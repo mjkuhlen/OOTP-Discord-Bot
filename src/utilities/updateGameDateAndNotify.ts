@@ -46,7 +46,7 @@ export default async function updateGameDateAndNotify() {
             console.log('New data found, users & date updated.');
             return dayjs(gamedate).format('dddd, MMMM D, YYYY')
         } else {
-            console.log('Checking for new data.');
+            console.log("Gamedate hasn't updated, no changes to users or date.");
             return null
         }
         
