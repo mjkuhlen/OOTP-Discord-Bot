@@ -123,7 +123,7 @@ export default new client.command({
                     {name:'AB', value: `${dbPlayer.batting_stats[0].ab}`, inline: true},
                     {name:'H', value: `${dbPlayer.batting_stats[0].h}`, inline: true},
                     {name:'AVG', value: `${(dbPlayer.batting_stats[0].h/dbPlayer.batting_stats[0].ab).toFixed(3)}`, inline: true},
-                    {name:'OBP', value: `${((dbPlayer.batting_stats[0].h + dbPlayer.batting_stats[0].bb + dbPlayer.batting_stats[0].hp)/(dbPlayer.batting_stats[0].ab + dbPlayer.batting_stats[0].hp + dbPlayer.batting_stats[0].sf)).toFixed(3)}`, inline: true},
+                    {name:'OBP', value: `${((dbPlayer.batting_stats[0].h + dbPlayer.batting_stats[0].bb + dbPlayer.batting_stats[0].hp)/(dbPlayer.batting_stats[0].ab + dbPlayer.batting_stats[0].bb + dbPlayer.batting_stats[0].hp + dbPlayer.batting_stats[0].sf)).toFixed(3)}`, inline: true},
                     {name:'K', value: `${dbPlayer.batting_stats[0].k}`, inline: true},
                     {name:'PA', value: `${dbPlayer.batting_stats[0].pa}`, inline: true},
                     {name:'G', value: `${dbPlayer.batting_stats[0].g}`, inline: true},
