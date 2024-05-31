@@ -3,6 +3,7 @@ import { client } from "../..";
 import { exec } from 'child_process';
 import * as fs from 'fs';
 import { config } from "dotenv";
+import updateGameDateAndNotify from "../../utilities/updateGameDateAndNotify";
 
 export default new client.command({
     structure: new SlashCommandBuilder()
@@ -42,12 +43,25 @@ export default new client.command({
             }
             // Wait for all import tasks to complete
             await Promise.all(importPromises);
-            const endTime = Date.now(); // Record end time
-            const duration = (endTime - startTime) / 1000; // Calculate duration in seconds
-            await interaction.editReply({content: `The SQL DB has been updated. Time taken: ${duration} seconds.`});
+            let newDate
+            try {
+                newDate = await updateGameDateAndNotify();
+                const endTime = Date.now(); // Record end time
+                const duration = (endTime - startTime) / 1000; // Calculate duration in seconds
+                let response
+                if (newDate) {
+                    response = `The SQL DB has been updated. Time taken: ${duration} seconds. The current game date is ${newDate}`
+                } else {
+                    response = `The SQL DB has been updated. Time taken: ${duration} seconds.`
+                }
+                await interaction.editReply({content: response});
+            } catch (err) {
+                console.error(err)
+            }
         } catch (err) {
             console.error(err);
             await interaction.editReply({content: 'Something went wrong, Simbot is sad.'});
         }
     }
 });
+
