@@ -59,6 +59,8 @@ export default new client.command({
                       league_id: true,
                       ab: true,
                       h: true,
+                      d: true,
+                      t: true,
                       k: true,
                       sf: true,
                       pa: true,
@@ -118,12 +120,14 @@ export default new client.command({
               let playerStats:any = []
 
               if(dbPlayer?.batting_stats[0]?.pa > 0) {
+                let s = dbPlayer.batting_stats[0].h - (dbPlayer.batting_stats[0].d + dbPlayer.batting_stats[0].t + dbPlayer.batting_stats[0].hr)
                 playerStats.push(
                     {name:'Year', value: `${dbPlayer.batting_stats[0].year}`, inline: true},
                     {name:'AB', value: `${dbPlayer.batting_stats[0].ab}`, inline: true},
                     {name:'H', value: `${dbPlayer.batting_stats[0].h}`, inline: true},
                     {name:'AVG', value: `${(dbPlayer.batting_stats[0].h/dbPlayer.batting_stats[0].ab).toFixed(3)}`, inline: true},
                     {name:'OBP', value: `${((dbPlayer.batting_stats[0].h + dbPlayer.batting_stats[0].bb + dbPlayer.batting_stats[0].hp)/(dbPlayer.batting_stats[0].ab + dbPlayer.batting_stats[0].bb + dbPlayer.batting_stats[0].hp + dbPlayer.batting_stats[0].sf)).toFixed(3)}`, inline: true},
+                    {name: 'SLG', value: `${((s + dbPlayer.batting_stats[0].d*2 + dbPlayer.batting_stats[0].t*3 + dbPlayer.batting_stats[0].hr*4)/dbPlayer.batting_stats[0].ab).toFixed(3)}`, inline: true},
                     {name:'K', value: `${dbPlayer.batting_stats[0].k}`, inline: true},
                     {name:'PA', value: `${dbPlayer.batting_stats[0].pa}`, inline: true},
                     {name:'G', value: `${dbPlayer.batting_stats[0].g}`, inline: true},
