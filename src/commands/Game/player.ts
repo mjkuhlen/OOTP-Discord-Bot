@@ -70,6 +70,11 @@ export default new client.command({
                       rbi: true,
                       bb: true,
                       hp: true,
+                      sb: true,
+                      cs: true,
+                      ci: true,
+                      wpa: true,
+                      ubr: true,
                       war: true
                     }
                   },
@@ -137,7 +142,12 @@ export default new client.command({
                     {name:'BB', value: `${dbPlayer.batting_stats[0].bb}`, inline: true},
                     {name:'HP', value: `${dbPlayer.batting_stats[0].hp}`, inline: true},
                     {name:'SF', value: `${dbPlayer.batting_stats[0].sf}`, inline: true},
-                    {name:'WAR', value: `${dbPlayer.batting_stats[0].war}`, inline: true}
+                    {name:'SB', value: `${dbPlayer.batting_stats[0].sb}`, inline: true},
+                    {name:'CS', value: `${dbPlayer.batting_stats[0].cs}`, inline: true},
+                    {name:'CI', value: `${dbPlayer.batting_stats[0].ci}`, inline: true},
+                    {name:'WAR', value: `${dbPlayer.batting_stats[0].war}`, inline: true},
+                    {name:'WPA', value: `${dbPlayer.batting_stats[0].wpa}`, inline: true},
+                    {name:'UBR', value: `${dbPlayer.batting_stats[0].ubr}`, inline: true}
                 )
               }
 
