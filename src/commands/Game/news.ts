@@ -20,7 +20,7 @@ export default new client.command({
                 orderBy: {
                     date: 'desc'
                 },
-                take: 25
+                take: 20
             });
             const headlines:any = []
             pNews.map((headline: any) => 
