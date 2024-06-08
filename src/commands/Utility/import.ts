@@ -27,7 +27,7 @@ export default new client.command({
                     console.log(`Queuing import for file: ${filePath}`);
                     // Execute mysql command to import SQL file asynchronously
                     const importPromise = new Promise<void>((resolve, reject) => {
-                        exec(`mysql -u ${username} -p${password} ${database} < ${filePath}`, (error, stdout, stderr) => {
+                        exec(`mysql -h mysql -P 3306 -u ${username} -p${password} ${database} < ${filePath}`, (error, stdout, stderr) => {
                             if (error) {
                                 console.error(`Error importing file: ${filePath}`, error);
                                 reject(error);
