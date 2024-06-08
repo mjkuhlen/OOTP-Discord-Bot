@@ -13,7 +13,7 @@ export default async function hrLeaders(league_id: number, sub_league_id: number
                     _max: {
                         year: true
                     }
-                }).then(result => result._max.year)
+                }).then((result: any) => result._max.year)
             },
             player: {
                 team: {

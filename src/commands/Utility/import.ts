@@ -2,7 +2,6 @@ import { SlashCommandBuilder } from "discord.js";
 import { client } from "../..";
 import { exec } from 'child_process';
 import * as fs from 'fs';
-import { config } from "dotenv";
 import updateGameDateAndNotify from "../../utilities/updateGameDateAndNotify";
 
 export default new client.command({
@@ -10,10 +9,10 @@ export default new client.command({
         .setName('import')
         .setDescription('Imports new SQL files into the DB'),
     run: async (client, interaction) => {
-        const sqlDir = '/home/kuhlen/sql_files';
-        const username = process.env.DATABASE_USER;
-        const database = process.env.DATABASE_NAME;
-        const password = process.env.DATABASE_PASSWORD;
+        const sqlDir = '/sql_files';
+        const username = process.env.DB_USER;
+        const database = process.env.DB_NAME;
+        const password = process.env.DB_PASSWORD;
         try {
             await interaction.deferReply();
             const startTime = Date.now(); // Record start time
