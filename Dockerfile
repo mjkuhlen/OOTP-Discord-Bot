@@ -27,7 +27,7 @@ COPY . .
 RUN tsc
 
 # Expose the port the app runs on
-EXPOSE 3000
+EXPOSE 3010
 
 # Start the bot using the compiled JavaScript file
 CMD ["node", "dist/index.js"]

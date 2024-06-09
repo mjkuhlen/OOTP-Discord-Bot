@@ -12,6 +12,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
       - /home/kuhlen/ootp/sql_files:/sql_files
+      - /home/kuhlen/ootp/config/my.cnf:/etc/mysql/my.cnf
     networks:
       - ootp_network
 
