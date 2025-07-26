@@ -7,9 +7,8 @@ export default function readCSV(filePath: string, league_id?: string): Promise<a
         const data: any[] = [];
     
         fs.createReadStream(filePath)
-          .pipe(
-            csvParser({
-              mapHeaders: ({ header }): string | null => {
+          .pipe(csvParser({
+            mapHeaders: ({ header }): string | null => {
                 // Add logic to filter columns if needed
                 if (header === 'league_id' && league_id) {
                   // If league_id is provided, only parse rows with the matching league_id
@@ -18,8 +17,7 @@ export default function readCSV(filePath: string, league_id?: string): Promise<a
                 // By default, parse all columns
                 return header;
               },
-            })
-          )
+          }) as any) // <-- Add 'as any' here
           .on('data', (row: any) => {
             // Add additional filtering logic if needed
             if (!league_id || row.league_id === league_id) {
