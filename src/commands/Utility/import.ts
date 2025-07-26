@@ -47,10 +47,10 @@ export default new client.command({
                     const tableName = file.replace('.csv', '');
                     console.log(`Queuing import for CSV file: ${filePath}`);
                     // Build LOAD DATA INFILE SQL command
-                    const sqlCmd = `LOAD DATA LOCAL INFILE '${filePath.replace(/\\/g, '/')}' INTO TABLE ${tableName} FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\\n' IGNORE 1 LINES;`;
+                    const sqlCmd = `LOAD DATA LOCAL INFILE '${filePath.replace(/\\/g, '/')}' INTO TABLE ${tableName} FIELDS TERMINATED BY ',' ENCLOSED BY "\\\"" LINES TERMINATED BY '\\n' IGNORE 1 LINES;`;
                     // Execute mysql command to import CSV file asynchronously
                     const importPromise = new Promise<void>((resolve) => {
-                        exec(`mysql --local-infile=1 -h mysql -P 3306 -u ${username} -p${password} ${database} -e '${sqlCmd}'`, (error, stdout, stderr) => {
+                        exec(`mysql --local-infile=1 -h mysql -P 3306 -u ${username} -p${password} ${database} -e "${sqlCmd}"`, (error, stdout, stderr) => {
                             if (error) {
                                 console.error(`Error importing CSV file: ${filePath}`, error);
                                 if (stderr) console.error(stderr);
