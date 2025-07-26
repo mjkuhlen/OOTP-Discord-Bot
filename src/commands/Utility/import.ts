@@ -20,21 +20,24 @@ export default new client.command({
             const files = fs.readdirSync(sqlDir);
             // Array to store promises for each import task
             const importPromises = [];
+            // Array to store results and errors
+            const importResults: { file: string, error?: Error }[] = [];
             // Iterate over each SQL file
             for (const file of files) {
                 if (file.endsWith('.sql')) {
                     const filePath = `${sqlDir}/${file}`;
                     console.log(`Queuing import for file: ${filePath}`);
                     // Execute mysql command to import SQL file asynchronously
-                    const importPromise = new Promise<void>((resolve, reject) => {
+                    const importPromise = new Promise<void>((resolve) => {
                         exec(`mysql -h mysql -P 3306 -u ${username} -p${password} ${database} < ${filePath}`, (error, stdout, stderr) => {
                             if (error) {
                                 console.error(`Error importing file: ${filePath}`, error);
-                                reject(error);
+                                importResults.push({ file: filePath, error });
                             } else {
                                 console.log(`Successfully imported file: ${filePath}`);
-                                resolve();
+                                importResults.push({ file: filePath });
                             }
+                            resolve();
                         });
                     });
                     importPromises.push(importPromise);
@@ -42,20 +45,25 @@ export default new client.command({
             }
             // Wait for all import tasks to complete
             await Promise.all(importPromises);
-            let newDate
+
+            let newDate;
             try {
                 newDate = await updateGameDateAndNotify();
                 const endTime = Date.now(); // Record end time
                 const duration = (endTime - startTime) / 1000; // Calculate duration in seconds
-                let response
+                let response = `The SQL DB has been updated. Time taken: ${duration} seconds.`;
                 if (newDate) {
-                    response = `The SQL DB has been updated. Time taken: ${duration} seconds. The current game date is ${newDate}`
-                } else {
-                    response = `The SQL DB has been updated. Time taken: ${duration} seconds.`
+                    response += ` The current game date is ${newDate}.`;
+                }
+                // If any errors occurred, add them to the response
+                const failedFiles = importResults.filter(r => r.error).map(r => r.file);
+                if (failedFiles.length > 0) {
+                    response += `\nHowever, the following files failed to import:\n${failedFiles.join('\n')}`;
                 }
                 await interaction.editReply({content: response});
             } catch (err) {
-                console.error(err)
+                console.error(err);
+                await interaction.editReply({content: 'Something went wrong, Simbot is sad.'});
             }
         } catch (err) {
             console.error(err);
