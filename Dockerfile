@@ -2,7 +2,7 @@
 FROM node:18
 
 # Install MySQL Client
-Run apt-get update && apt-get install -y default-mysql-client
+RUN apt-get update && apt-get install -y default-mysql-client
 
 # Create and set the working directory
 WORKDIR /OOTP-Discord-Bot
