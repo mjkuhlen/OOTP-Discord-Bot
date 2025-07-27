@@ -2,6 +2,7 @@ services:
   mysql:
     image: mysql:8.1
     container_name: mysql_container
+    restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -20,6 +21,7 @@ services:
     build:
       context: .
     container_name: discord_bot
+    restart: unless-stopped
     env_file: .env
     depends_on:
       - mysql
