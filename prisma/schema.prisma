@@ -48,6 +48,23 @@ model games {
   starter1Player  players? @relation("Starter1", fields: [starter1], references: [player_id])
 }
 
+model games_data {
+  game_id         Int     @id
+  home_team_name      String
+  away_team_name      String
+  date              DateTime
+  home_score         Int
+  away_score         Int
+  wp_first_name       String
+  wp_last_name        String
+  lp_first_name       String
+  lp_last_name        String
+  hsp_first_name      String
+  hsp_last_name       String
+  asp_first_name      String
+  asp_last_name       String
+}
+
 model leagues {
   league_id                              Int       @id
   name                                   String?   @db.VarChar(50)
