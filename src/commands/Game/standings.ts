@@ -30,7 +30,7 @@ export default new client.command({
 			await interaction.deferReply();
 			const leagueValue = interaction.options.getString('league');
 			const divisionValue = interaction.options.getString('division');
-			const league_id = 200;
+			const league_id = 203;
 
 			//get the teams from sql that matches the league and division values
 			const pTeams = await prisma.teams.findMany({

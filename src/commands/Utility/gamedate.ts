@@ -10,7 +10,7 @@ export default new client.command({
     run: async (client, interaction) => {
         try {
             await interaction.deferReply();
-            const league_id = 200
+            const league_id = 203
             const leagues = await prisma.leagues.findFirst({
                 where: {
                     league_id: league_id

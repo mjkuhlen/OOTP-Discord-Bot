@@ -13,8 +13,8 @@ export default new client.command({
             const pNews = await prisma.messages.findMany({
                 where: {
                     OR: [
-                        {league_id_0: 200},
-                        {league_id_1: 200}
+                        {league_id_0: 203},
+                        {league_id_1: 203}
                     ],
                 },
                 orderBy: {

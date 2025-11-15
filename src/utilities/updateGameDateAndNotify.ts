@@ -6,7 +6,7 @@ import prisma from './client';
 
 export default async function updateGameDateAndNotify() {
     try {
-        const league_id = 200;
+        const league_id = 203;
         const leagues = await prisma.leagues.findFirst({
             where: {
                 league_id: league_id,

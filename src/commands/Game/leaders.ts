@@ -42,7 +42,7 @@ export default new client.command({
     run: async (client, interaction) => {
         try {
             await interaction.deferReply();
-            const league_id = 200;
+            const league_id = 203;
             const leagueValue = Number(interaction.options.getString('league'));
             const category = interaction.options.getString('category');
             const tableRows: any = [];

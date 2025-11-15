@@ -19,7 +19,7 @@ export default new client.command({
             .setDescription('The players last name')
             .setRequired(true)),
     run: async (client, interaction) => {
-      const league_id = 200;
+      const league_id = 203;
       const team_nickname = interaction.options.getString('team');
       const player_firstName = interaction.options.getString('fname');
       const player_lastName = interaction.options.getString('lname');
